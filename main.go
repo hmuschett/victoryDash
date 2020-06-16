@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 	"text/template"
 
 	"github.com/gorilla/mux"
@@ -21,6 +22,11 @@ func main() {
 	}).Methods("GET")
 
 	log.Println("The server is lisening on 3000 port")
-	log.Fatal(http.ListenAndServe(":3000", mux))
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "3000"
+	}
+	log.Println(port)
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 
 }
