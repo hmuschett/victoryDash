@@ -1,4 +1,4 @@
-module github.com/hmuschett/victoryDash
+module victorydash
 
 go 1.13
 
