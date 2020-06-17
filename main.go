@@ -1,10 +1,10 @@
 package main
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 	"os"
-	"text/template"
 
 	"github.com/gorilla/mux"
 )
