@@ -1,2 +1,14 @@
+github.com/bold-commerce/go-shopify v2.3.0+incompatible h1:AiedLiOoFWp7iVO8n6JJOM7IEdyU4nLAvUKNM7Hw8b4=
+github.com/bold-commerce/go-shopify v2.3.0+incompatible/go.mod h1:R9OKSw+EViwy7MGrAxma3q+Vqq8kMyZu+OJhx/dcw6s=
+github.com/go-sql-driver/mysql v1.5.0 h1:ozyZYNQW3x3HtqT1jira07DN2PArx2v7/mN66gGcHOs=
+github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
+github.com/google/go-querystring v1.0.0 h1:Xkwi/a1rcvNg1PPYe5vI8GbeBY/jrVuDX5ASuANWTrk=
+github.com/google/go-querystring v1.0.0/go.mod h1:odCYkC5MyYFN7vkCjXpyrEuKhc/BUO6wN/zVPAxq5ck=
 github.com/gorilla/mux v1.7.4 h1:VuZ8uybHlWmqV03+zRzdwKL4tUnIp1MAQtp1mIFE1bc=
 github.com/gorilla/mux v1.7.4/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
+github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
+github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=
+github.com/scorredoira/email v0.0.0-20191107070024-dc7b732c55da h1:hhmnjfzz7szp75AyXxn8tDfEA0oU4REQLmpuW6zNAOY=
+github.com/scorredoira/email v0.0.0-20191107070024-dc7b732c55da/go.mod h1:Q5ljvYIBpukMH+wgB8kcPV1i9NX8TqU++8GgBKq3pt0=
+github.com/shopspring/decimal v1.2.0 h1:abSATXmQEYyShuxI4/vyW3tV1MrKAJzCZ/0zLUXYbsQ=
+github.com/shopspring/decimal v1.2.0/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=
