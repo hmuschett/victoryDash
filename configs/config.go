@@ -50,7 +50,8 @@ func init() {
 	dbConenction.port, _ = strconv.Atoi(os.Getenv("DB_PORT"))
 	dbConenction.dbName = os.Getenv("DB_DBNAME")
 
-	m.mail = os.Getenv("MAIL")
+	m = &ClientMail{}
+	m.mail = os.Getenv("CLIENT_MAIL")
 	m.server = os.Getenv("SERVER_MAIL")
 	m.password = os.Getenv("PASS_MAIL")
 
