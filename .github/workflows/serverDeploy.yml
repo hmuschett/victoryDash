@@ -32,9 +32,7 @@ jobs:
 
     - name: setup env
       run: |
-        echo "::set-env name=GOPATH::$(go env GOPATH)"
-        echo "::add-path::$(go env GOPATH)/bin"
-      shell: bash
+         export PATH=$PATH:$/root/go/bin:/usr/local/go/bin
 
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
