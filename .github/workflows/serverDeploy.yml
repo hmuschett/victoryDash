@@ -30,9 +30,9 @@ jobs:
     #- name: Build app 
     #  run:  go build -o app main.go 
 
-    - name: setup env
-      run: |
-         export PATH=$PATH:$/root/go/bin:/usr/local/go/bin
+    #- name: setup env
+    #  run: |
+    #     export PATH=$PATH:$/root/go/bin:/usr/local/go/bin
 
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
@@ -46,7 +46,6 @@ jobs:
           git pull origin master && 
           git status && 
           echo $PATH &&   
-          go build -o app main.go  &&         
           systemctl daemon-reload && 
           systemctl status goweb          
    
