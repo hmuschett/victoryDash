@@ -27,8 +27,14 @@ jobs:
         go-version: 1.13
       id: go
 
-    - name: Build app 
-      run:  go build -o app main.go 
+    #- name: Build app 
+    #  run:  go build -o app main.go 
+
+    - name: setup env
+      run: |
+        echo "::set-env name=GOPATH::$(go env GOPATH)"
+        echo "::add-path::$(go env GOPATH)/bin"
+      shell: bash
 
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
@@ -41,7 +47,8 @@ jobs:
           cd go/victorydash/ && 
           git pull origin master && 
           git status && 
-          echo $PATH &&           
+          echo $PATH &&   
+          go build -o app main.go  &&         
           systemctl daemon-reload && 
           systemctl status goweb          
    
