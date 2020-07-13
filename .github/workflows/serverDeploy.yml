@@ -33,7 +33,7 @@ jobs:
           cd go/victorydash/ && 
           git pull origin master && 
           git status && 
-          echo &PATH && 
+          echo $PATH && 
           go build -o app main.go && 
           systemctl daemon-reload && 
           systemctl status goweb          
