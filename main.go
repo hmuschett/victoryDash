@@ -26,6 +26,7 @@ func (d *data) UpdateO() {
 func main() {
 	configs.CreateConnection()
 	defer configs.CloseConnection()
+	defer fmt.Println("se cerro del sistema")
 
 	mux := mux.NewRouter()
 	s := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))

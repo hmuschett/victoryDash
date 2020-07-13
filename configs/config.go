@@ -83,6 +83,11 @@ func GetPort() string {
 	return os.Getenv("WEB_PORT")
 }
 
+//GetUrlShopOrders return the url from env
+func GetUrlShopOrders() string {
+	return os.Getenv("SHOP_ORDERS")
+}
+
 //GetMailConfig return
 func GetMailConfig() ClientMail {
 	return *m

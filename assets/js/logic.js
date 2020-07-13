@@ -27,6 +27,9 @@ function  isSentMail( data){
   console.log(data)
   if(data.data.No){
     alert("Those orders not have products from WERM")
+  }else{
+    window.location.reload()
+    alert("Seng success")
   }
 }
 function refreshOrders(){
@@ -37,6 +40,7 @@ function refreshOrders(){
     }
    
   }).then(res => res.json()) 
+  
   console.log("why are here")
 }
 

@@ -20,7 +20,7 @@ import (
 
 //GetOrdersFromShopify get the last 50 orders activitis from Shopify
 func GetOrdersFromShopify() goshopify.OrdersResource {
-	url := "https://38bf6d9fd4b6fa66b7826fb14a59c648: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@victoryswitzerland.myshopify.com/admin/api/2020-04/orders.json"
+	url := configs.GetUrlShopOrders()
 	orders := goshopify.OrdersResource{}
 	err := getJSON(url, &orders)
 
@@ -32,7 +32,7 @@ func GetOrdersFromShopify() goshopify.OrdersResource {
 
 //UpDateOrders get Orders from Shopify and update in our database
 func UpDateOrders() {
-	url := "https://38bf6d9fd4b6fa66b7826fb14a59c648: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@victoryswitzerland.myshopify.com/admin/api/2020-04/orders.json"
+	url := configs.GetUrlShopOrders()
 	orders := goshopify.OrdersResource{}
 	err := getJSON(url, &orders)
 
@@ -110,6 +110,7 @@ func GetOrders() (goshopify.OrdersResource, error) {
 		row.Scan(&order.Name, &order.ID, &order.Confirmed, &order.SubtotalPrice)
 		orderResourse.Orders = append(orderResourse.Orders, order)
 	}
+
 	return orderResourse, err
 }
 
