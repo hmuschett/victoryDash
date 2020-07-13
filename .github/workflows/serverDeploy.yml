@@ -30,7 +30,7 @@ jobs:
         key: ${{ secrets.serverKey }}
         port: 22
         script: 
-          cd /go/victorydash/ && 
+          cd go/victorydash/ && 
           git pull origin master && 
           git status && 
           go build -o app main.go && 
