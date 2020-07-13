@@ -26,6 +26,10 @@ jobs:
       with: 
         go-version: 1.13
       id: go
+
+    - name: Build app 
+      run:  go build -o app main.go 
+
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
       with:
@@ -37,8 +41,7 @@ jobs:
           cd go/victorydash/ && 
           git pull origin master && 
           git status && 
-          echo $PATH && 
-          go build -o app main.go && 
+          echo $PATH &&           
           systemctl daemon-reload && 
           systemctl status goweb          
    
