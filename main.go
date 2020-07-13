@@ -41,7 +41,6 @@ func main() {
 	}).Methods("GET")
 	mux.HandleFunc("/api/v1/ordersmails", handlers.SendMails).Methods("POST")
 	mux.HandleFunc("/updateOrder", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("we are here :(")
 		handlers.UpDateOrders()
 	}).Methods("GET")
 
