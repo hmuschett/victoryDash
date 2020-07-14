@@ -10,7 +10,7 @@ function SendEmail()
    }
    let data={"mails": arr}
    console.log(JSON.stringify(data))
-   var url = 'http://localhost:3000/api/v1/ordersmails';
+   var url = '/api/v1/ordersmails';
 fetch(url, {
   method: 'POST',
   body: JSON.stringify(data), 
