@@ -19,8 +19,8 @@ fetch(url, {
   }
 }).then(res => res.json())
 .then(res => isSentMail(res))
+.then(response => console.log('Success:', response))
 .catch(error => console.error('Error:', error))
-.then(response => console.log('Success:', response)); 
 
 } 
 
@@ -33,23 +33,24 @@ function refreshOrders(){
    
   }).then(res => res.json())
   .then(res => waitReaload(res))
-  .catch(res => waitReaload(res))
   
   console.log("why are here")
 }
 
-function waitReaload(data) {
+function waitReaload(data)  {
   console.log(data)
-  if(data.data.Si){
+  if(data.data.Si){   
+    setInterval(()=> {
+      alert("Update success")
+    }, 15000)
     window.location.reload()
-    alert("Update success")
   }
 }
 function  isSentMail( data){
   if(data.data.No){
     alert("Those orders not have products from WERM")
-  }else{
+  }else{    
+    alert("Send success!!!")
     window.location.reload()
-    alert("Seng success")
   }
 }

@@ -147,12 +147,12 @@ func SendMails(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateCsvOrderByProvider(arrIdSopify []string, provider string) (string, error) {
-	query := `SELECT o.name_shopify,TRIM(LEADING 'WERM-' FROM po.sku ) sku, po.quantity FROM orders  o  
+	query := `SELECT o.name_shopify,SUBSTRING_INDEX(po.sku, '-', -1) sku, po.quantity FROM orders  o  
 				JOIN product_order po on o.id =po.order_id 
-				WHERE  po.vendor LIKE ?
+				WHERE  po.vendor LIKE CONCAT('%', ?, '%' ) 
 					AND o.id_shopify IN (%s)`
 	ids := "'" + strings.Join(arrIdSopify[:], "','") + "'"
-	query = fmt.Sprintf(query, ids)
+	query = strings.ReplaceAll(query, "%s", ids)
 	fmt.Println(query)
 	rows, err := configs.Query(query, provider)
 	if err != nil {

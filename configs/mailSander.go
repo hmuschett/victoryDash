@@ -51,7 +51,7 @@ func SendMailForWermProvider(pathFile string) {
 	}
 	fmt.Println(me)
 	//auth := smtp.PlainAuth("", "shop@victoryswitzerland.com", "S12345678v", "smtp.office365.com")
-	auth := loginAuthStartTLS(m.server, m.password)
+	auth := loginAuthStartTLS(m.mail, m.password)
 	if err := email.Send(m.server, auth, me); err != nil {
 		log.Fatal(err)
 	}
