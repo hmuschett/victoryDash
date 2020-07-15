@@ -63,12 +63,14 @@ func CreateConnection() {
 		panic(err)
 	} else {
 		db = connetcion
+		log.Println("conecction db succeful!!")
 	}
 }
 
 //CloseConnection for close de conection to db
 func CloseConnection() {
 	db.Close()
+	log.Println("Close conecction db succeful!!")
 }
 
 //Ping make a ping to db

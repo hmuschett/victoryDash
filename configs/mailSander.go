@@ -39,8 +39,10 @@ func (a *loginAuth) Next(fromServer []byte, more bool) ([]byte, error) {
 //SendMailForWermProvider create and send a new mail
 func SendMailForWermProvider(pathFile string) {
 	//server := GetMailConfig()
+	fmt.Println(">>>>>>>>>")
+	fmt.Println(m.server + " " + m.mail + " " + m.password)
 	me := email.NewMessage("this is the sugget", "and this is the bbody email")
-	me.From = mail.Address{Name: "From", Address: m.server}
+	me.From = mail.Address{Name: "From", Address: m.mail}
 	me.To = []string{"hmuschett@gmail.com"}
 
 	err := me.Attach(pathFile)

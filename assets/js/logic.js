@@ -23,15 +23,7 @@ fetch(url, {
 .then(response => console.log('Success:', response)); 
 
 } 
-function  isSentMail( data){
-  console.log(data)
-  if(data.data.No){
-    alert("Those orders not have products from WERM")
-  }else{
-    window.location.reload()
-    alert("Seng success")
-  }
-}
+
 function refreshOrders(){
   fetch("/updateOrder", {
     method: 'GET',
@@ -39,14 +31,25 @@ function refreshOrders(){
       'Content-Type': 'application/json'
     }
    
-  }).then(res => res.json()) 
+  }).then(res => res.json())
+  .then(res => waitReaload(res))
+  .catch(res => waitReaload(res))
   
   console.log("why are here")
 }
 
-function loadMore() {
-  var xhr = new XMLHttpRequest();
-  
-  xhr.open("GET", "/updateOrder/", true);
-  try { xhr.send(); } catch (err) { /* handle error */ }
+function waitReaload(data) {
+  console.log(data)
+  if(data.data.Si){
+    window.location.reload()
+    alert("Update success")
+  }
+}
+function  isSentMail( data){
+  if(data.data.No){
+    alert("Those orders not have products from WERM")
+  }else{
+    window.location.reload()
+    alert("Seng success")
+  }
 }

@@ -31,7 +31,7 @@ func GetOrdersFromShopify() goshopify.OrdersResource {
 }
 
 //UpDateOrders get Orders from Shopify and update in our database
-func UpDateOrders() {
+func UpDateOrders(w http.ResponseWriter, r *http.Request) {
 	url := configs.GetUrlShopOrders()
 	orders := goshopify.OrdersResource{}
 	err := getJSON(url, &orders)
@@ -53,6 +53,11 @@ func UpDateOrders() {
 			continue
 		}
 	}
+	results := make(map[string]string)
+
+	results["SI"] = "Las ordernes fueron actualizadas"
+
+	models.SendData(w, results)
 }
 
 //GetOrderByIDShopifyAndnameShopify return a order from DB by ID_Shopify  name_Shopify
@@ -124,17 +129,20 @@ func SendMails(w http.ResponseWriter, r *http.Request) {
 	out := fmt.Sprintf("%v", results["mails"])
 	out1 := strings.TrimLeft(strings.TrimRight(out, "]"), "[")
 	out2 := strings.Split(out1, " ")
+
 	fmt.Println(out2)
 
 	//crear el csv
 	pf, err := CreateCsvOrderByProvider(out2, "WERM")
+	fmt.Println("el nombre del csv es: " + pf)
 	if err != nil {
 		//log.Panicln(err)
 		results["No"] = "las ordenes selecionas no tienen productos para el proveedor  "
+	} else {
+		//mandar el csv adjunto en un correo
+		configs.SendMailForWermProvider(pf)
 	}
-	fmt.Println(pf)
-	//mandar el csv adjunto en un correo
-	configs.SendMailForWermProvider(pf)
+
 	models.SendData(w, results)
 }
 
@@ -152,8 +160,9 @@ func CreateCsvOrderByProvider(arrIdSopify []string, provider string) (string, er
 	}
 	result := convertRowsInStringMatrix(rows)
 
+	fmt.Println(result)
 	if len(result) == 0 {
-		return "error", errors.New("no se lleno el arreglo ")
+		return "error no se lleno el csv", errors.New("no se lleno el arreglo ")
 	}
 	nameFile := writeCsvProvider(result)
 	fmt.Println(nameFile)
