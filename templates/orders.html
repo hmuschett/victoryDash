@@ -8,7 +8,7 @@
             <button type="submit" class="btn btn-info btn-fill pull-right" onclick="refreshOrders()">Refresh Orders</button>
         </div>
     </div>   
-
+<br/>
     <div class="row ">   
         <div class="col-md-12">
             <div class="card strpied-tabled-with-hover">
@@ -22,7 +22,8 @@
                             <th>Select</th>             
                             <th>Name</th>                
                             <th>Total</th>   
-                            <th>Already Send</th>             
+                            <th>Already Send</th>
+                                        
                         </thead>
                         <tbody>
                                 {{range .Orders}}
@@ -31,6 +32,7 @@
                                         <td>{{.Name}}</td>                            
                                         <td>{{.SubtotalPrice}}</td>
                                         <td>{{.Confirmed}}</td>
+                                        
                                     </tr>
                                 {{end}}
                         </tbody>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
