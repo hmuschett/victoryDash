@@ -104,7 +104,7 @@ func SaveOrder(order goshopify.Order) int64 {
 func GetOrdersWERM() (goshopify.OrdersResource, error) {
 	orderResourse := goshopify.OrdersResource{}
 	err := error(nil)
-	query := `SELECT name_shopify,  id_shopify,send_provider, subtotal_price 
+	query := `SELECT name_shopify,  id_shopify,send_provider, subtotal_price, send_provider
 				FROM orders o	
 				WHERE o.id_shopify in (SELECT  id_shopify FROM  (select * from orders) as oo 
 											join product_order po 
@@ -116,7 +116,7 @@ func GetOrdersWERM() (goshopify.OrdersResource, error) {
 	row, err := configs.Query(query)
 	for row.Next() {
 		order := goshopify.Order{}
-		row.Scan(&order.Name, &order.ID, &order.Confirmed, &order.SubtotalPrice)
+		row.Scan(&order.Name, &order.ID, &order.Confirmed, &order.SubtotalPrice, &order.Gateway)
 		orderResourse.Orders = append(orderResourse.Orders, order)
 	}
 
@@ -145,13 +145,24 @@ func SendMails(w http.ResponseWriter, r *http.Request) {
 	} else {
 		//mandar el csv adjunto en un correo
 		go configs.SendMailForWermProvider(pf)
+		go updateStatusOrders(out2, "WERM")
 	}
 
 	models.SendData(w, results)
 }
-func UpdateStatusOrders(arrIdSopify []string, provider string) {
-	query := ``
-	configs.Exec(query)
+func updateStatusOrders(arrIDSopify []string, provider string) {
+	query := ` 	UPDATE orders 
+					SET orders.status = 'sendProvider',
+						orders.send_provider = TRUE 
+				WHERE orders.id_shopify in (
+							SELECT  id_shopify FROM (select * from orders) as  o  
+								JOIN product_order po on o.id =po.order_id 
+								WHERE  po.vendor LIKE CONCAT('%', ?, '%' )
+									AND o.id_shopify IN (%s)
+								)`
+	ids := "'" + strings.Join(arrIDSopify[:], "','") + "'"
+	query = strings.ReplaceAll(query, "%s", ids)
+	configs.Exec(query, provider)
 }
 func CreateCsvOrderByProvider(arrIdSopify []string, provider string) (string, error) {
 	query := `SELECT o.name_shopify,SUBSTRING_INDEX(po.sku, '-', -1) sku, po.quantity FROM orders  o  
