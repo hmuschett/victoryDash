@@ -39,10 +39,8 @@ function refreshOrders(){
 
 function waitReaload(data)  {
   console.log(data)
-  if(data.data.Si){   
-    setInterval(()=> {
-      alert("Update success")
-    }, 15000)
+  if(data.data.Si){     
+    alert("Update success")   
     window.location.reload()
   }
 }

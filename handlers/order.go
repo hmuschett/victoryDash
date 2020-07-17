@@ -140,12 +140,15 @@ func SendMails(w http.ResponseWriter, r *http.Request) {
 		results["No"] = "las ordenes selecionas no tienen productos para el proveedor  "
 	} else {
 		//mandar el csv adjunto en un correo
-		configs.SendMailForWermProvider(pf)
+		go configs.SendMailForWermProvider(pf)
 	}
 
 	models.SendData(w, results)
 }
-
+func UpdateStatusOrders(arrIdSopify []string, provider string) {
+	query := ``
+	configs.Exec(query)
+}
 func CreateCsvOrderByProvider(arrIdSopify []string, provider string) (string, error) {
 	query := `SELECT o.name_shopify,SUBSTRING_INDEX(po.sku, '-', -1) sku, po.quantity FROM orders  o  
 				JOIN product_order po on o.id =po.order_id 
@@ -181,7 +184,7 @@ func writeCsvProvider(data [][]string) string {
 	if err != nil {
 		log.Println(err)
 	}
-	nameFile := path + "/files/supplierOrders " + date + ".csv"
+	nameFile := path + "/files/Bestellnummer " + date + ".csv"
 
 	newcsvFile, err := os.Create(nameFile)
 	if err != nil {
