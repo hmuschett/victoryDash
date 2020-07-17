@@ -100,14 +100,18 @@ func SaveOrder(order goshopify.Order) int64 {
 	return ID
 }
 
-//GetOrders return last 10 order
-func GetOrders() (goshopify.OrdersResource, error) {
+//GetOrdersWERM return last 10 order
+func GetOrdersWERM() (goshopify.OrdersResource, error) {
 	orderResourse := goshopify.OrdersResource{}
 	err := error(nil)
 	query := `SELECT name_shopify,  id_shopify,send_provider, subtotal_price 
-					FROM orders o 
-					order by o.name_shopify desc
-					limit 10`
+				FROM orders o	
+				WHERE o.id_shopify in (SELECT  id_shopify FROM  (select * from orders) as oo 
+											join product_order po 
+												on oo.id =po.order_id
+										where po.vendor LIKE "%WERM%" )
+				order by o.name_shopify desc
+				limit 10`
 
 	row, err := configs.Query(query)
 	for row.Next() {

@@ -33,7 +33,7 @@ func main() {
 	mux.PathPrefix("/assets/").Handler(s)
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		Orders, _ := handlers.GetOrders()
+		Orders, _ := handlers.GetOrdersWERM()
 		log.Println("Reload orders ")
 
 		templates.ExecuteTemplate(w, "index.html", Orders)
