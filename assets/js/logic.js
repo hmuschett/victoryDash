@@ -39,11 +39,14 @@ function refreshOrders(){
 
 function waitReaload(data)  {
   console.log(data)
-  if(data.data.Si){     
+  if(data.data.SI){     
     alert("Update success")   
     window.location.reload()
+  }else{
+    alert("There are not new orders!!!")
   }
 }
+
 function  isSentMail( data){
   if(data.data.No){
     alert("Those orders not have products from WERM")

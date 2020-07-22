@@ -32,7 +32,13 @@
                                         <td>{{.Name}}</td>                            
                                         <td>{{.SubtotalPrice}}</td>
                                         <td>{{.Confirmed}}</td>
-                                        
+                                        <td>
+                                            <select class="custom-select" name="status" id="ts">
+                                                <option value="0">0</option>
+                                                <option value="1" {{if .Confirmed }} selected {{end}}>yes</option>
+                                                <option value="3">3</option>
+                                            </select>
+                                        </td>
                                     </tr>
                                 {{end}}
                         </tbody>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    

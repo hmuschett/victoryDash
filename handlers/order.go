@@ -35,9 +35,11 @@ func UpDateOrders(w http.ResponseWriter, r *http.Request) {
 	url := configs.GetUrlShopOrders()
 	orders := goshopify.OrdersResource{}
 	err := getJSON(url, &orders)
+	results := make(map[string]string)
 
 	if err != nil {
 		fmt.Println(err)
+		results["No"] = "Cant not read from shopify"
 	}
 
 	for _, order := range orders.Orders {
@@ -53,7 +55,6 @@ func UpDateOrders(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 	}
-	results := make(map[string]string)
 
 	results["SI"] = "Las ordernes fueron actualizadas"
 
