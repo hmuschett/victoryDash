@@ -18,6 +18,12 @@ func TestConnection(t *testing.T) {
 	defer configs.CloseConnection()
 
 }*/
+func TestUpdateOrders(t *testing.T) {
+	configs.CreateConnection()
+
+	handlers.UpdateStatusOrder("2653824680096", "WERM", "received")
+	defer configs.CloseConnection()
+}
 func TestCreateCsvOrderByProvider(t *testing.T) {
 	configs.CreateConnection()
 	defer configs.CloseConnection()

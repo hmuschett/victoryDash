@@ -105,7 +105,7 @@ func SaveOrder(order goshopify.Order) int64 {
 func GetOrdersWERM() (goshopify.OrdersResource, error) {
 	orderResourse := goshopify.OrdersResource{}
 	err := error(nil)
-	query := `SELECT name_shopify,  id_shopify,send_provider, subtotal_price, send_provider
+	query := `SELECT name_shopify,  id_shopify, send_provider, subtotal_price, status
 				FROM orders o	
 				WHERE o.id_shopify in (SELECT  id_shopify FROM  (select * from orders) as oo 
 											join product_order po 
@@ -117,7 +117,7 @@ func GetOrdersWERM() (goshopify.OrdersResource, error) {
 	row, err := configs.Query(query)
 	for row.Next() {
 		order := goshopify.Order{}
-		row.Scan(&order.Name, &order.ID, &order.Confirmed, &order.SubtotalPrice, &order.Gateway)
+		row.Scan(&order.Name, &order.ID, &order.Confirmed, &order.SubtotalPrice, &order.BrowserIp)
 		orderResourse.Orders = append(orderResourse.Orders, order)
 	}
 
@@ -151,6 +151,27 @@ func SendMails(w http.ResponseWriter, r *http.Request) {
 
 	models.SendData(w, results)
 }
+
+//SetStatus set the status order by order ID
+func SetStatus(w http.ResponseWriter, r *http.Request) {
+	var results map[string]interface{}
+	body, _ := ioutil.ReadAll(r.Body)
+	if err := json.Unmarshal(body, &results); err != nil {
+		log.Fatal(err)
+	}
+	arrIDSopify := fmt.Sprintf("%v", results["id"])
+	fmt.Println(arrIDSopify)
+	status := results["status"]
+	fmt.Println(status)
+	if status == "sendProvider" {
+		go updateStatusOrder(arrIDSopify, "WERM", "sendProvider")
+	} else if status == "received" {
+		go updateStatusOrder(arrIDSopify, "WERM", "received")
+	} else if status == "sendClient" {
+		go updateStatusOrder(arrIDSopify, "WERM", "sendClient")
+	}
+}
+
 func updateStatusOrders(arrIDSopify []string, provider string) {
 	query := ` 	UPDATE orders 
 					SET orders.status = 'sendProvider',
@@ -164,6 +185,20 @@ func updateStatusOrders(arrIDSopify []string, provider string) {
 	ids := "'" + strings.Join(arrIDSopify[:], "','") + "'"
 	query = strings.ReplaceAll(query, "%s", ids)
 	configs.Exec(query, provider)
+}
+
+func updateStatusOrder(arrIDSopify string, provider string, status string) {
+	query := ` 	UPDATE orders 
+					SET orders.status = ?,
+						orders.send_provider = TRUE 
+				WHERE orders.id_shopify in (
+							SELECT  id_shopify FROM (select * from orders) as  o  
+								JOIN product_order po on o.id = po.order_id 
+								WHERE  po.vendor LIKE CONCAT('%', ?, '%' )
+									AND o.id_shopify = ?
+								)`
+
+	configs.Exec(query, status, provider, arrIDSopify)
 }
 func CreateCsvOrderByProvider(arrIdSopify []string, provider string) (string, error) {
 	query := `SELECT o.name_shopify,SUBSTRING_INDEX(po.sku, '-', -1) sku, po.quantity FROM orders  o  

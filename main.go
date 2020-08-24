@@ -38,10 +38,11 @@ func main() {
 
 		templates.ExecuteTemplate(w, "index.html", Orders)
 	}).Methods("GET")
-	mux.HandleFunc("/api/v1/ordersmails", handlers.SendMails).Methods("POST")
-	mux.HandleFunc("/updateOrder", handlers.UpDateOrders).Methods("GET")
+	mux.HandleFunc("/api/v1/order/ordersmails", handlers.SendMails).Methods("POST")
+	mux.HandleFunc("/api/v1/order/updateOrder", handlers.UpDateOrders).Methods("GET")
+	mux.HandleFunc("/api/v1/order/setstatus", handlers.SetStatus).Methods("POST")
 
-	log.Println("The server is lisening ")
+	log.Println("The server is lisening")
 	log.Fatal(http.ListenAndServe(configs.GetPort(), mux))
 
 }
