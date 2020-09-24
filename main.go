@@ -38,6 +38,7 @@ func main() {
 
 		templates.ExecuteTemplate(w, "index.html", Orders)
 	}).Methods("GET")
+	mux.HandleFunc("/api/v1/order/orders", handlers.GetOrders).Methods("GET")
 	mux.HandleFunc("/api/v1/order/ordersmails", handlers.SendMails).Methods("POST")
 	mux.HandleFunc("/api/v1/order/updateOrder", handlers.UpDateOrders).Methods("GET")
 	mux.HandleFunc("/api/v1/order/setstatus", handlers.SetStatus).Methods("POST")

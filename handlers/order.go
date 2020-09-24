@@ -124,6 +124,13 @@ func GetOrdersWERM() (goshopify.OrdersResource, error) {
 	return orderResourse, err
 }
 
+//GetOrders from Werm return last 10 order
+func GetOrders(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
+	Orders, _ := GetOrdersWERM()
+	models.SendData(w, Orders)
+}
+
 //SendMails from arr of id_sopify send to
 func SendMails(w http.ResponseWriter, r *http.Request) {
 	var results map[string]interface{}
@@ -286,4 +293,9 @@ func getJSON(url string, target interface{}) error {
 	defer r.Body.Close()
 
 	return json.NewDecoder(r.Body).Decode(target)
+}
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
