@@ -129,10 +129,18 @@ func GetOrders(w http.ResponseWriter, r *http.Request) {
 	enableCors(&w)
 	Orders, _ := GetOrdersWERM()
 	models.SendData(w, Orders)
+	/*if utils.IsAuthenticated(r) {
+		Orders, _ := GetOrdersWERM()
+		models.SendData(w, Orders)
+	} else {
+		models.SendData(w, http.StatusMethodNotAllowed)
+	}*/
+
 }
 
 //SendMails from arr of id_sopify send to
 func SendMails(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	var results map[string]interface{}
 	body, _ := ioutil.ReadAll(r.Body)
 	if err := json.Unmarshal(body, &results); err != nil {
@@ -161,6 +169,7 @@ func SendMails(w http.ResponseWriter, r *http.Request) {
 
 //SetStatus set the status order by order ID
 func SetStatus(w http.ResponseWriter, r *http.Request) {
+	enableCors(&w)
 	var results map[string]interface{}
 	body, _ := ioutil.ReadAll(r.Body)
 	if err := json.Unmarshal(body, &results); err != nil {
@@ -295,7 +304,8 @@ func getJSON(url string, target interface{}) error {
 	return json.NewDecoder(r.Body).Decode(target)
 }
 func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	//(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
 	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }

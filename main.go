@@ -43,7 +43,8 @@ func main() {
 	mux.HandleFunc("/api/v1/order/updateOrder", handlers.UpDateOrders).Methods("GET")
 	mux.HandleFunc("/api/v1/order/setstatus", handlers.SetStatus).Methods("POST")
 
+	mux.HandleFunc("/api/v1/user/login", handlers.Login).Methods("GET", "POST")
+
 	log.Println("The server is lisening")
 	log.Fatal(http.ListenAndServe(configs.GetPort(), mux))
-
 }

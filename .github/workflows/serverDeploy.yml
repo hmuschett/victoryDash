@@ -47,6 +47,7 @@ jobs:
           git pull origin master && 
           git status && 
           echo $PATH && 
+          go build -o app main.go &&
           systemctl restart goweb.service &&
           systemctl status goweb          
    

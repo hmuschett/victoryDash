@@ -4,12 +4,33 @@ import (
 	"testing"
 	"victorydash/configs"
 	"victorydash/handlers"
+	"victorydash/models"
 )
 
 func TestConnection(t *testing.T) {
 	configs.CreateConnection()
 	configs.Ping()
 	defer configs.CloseConnection()
+}
+func TestLogin(t *testing.T) {
+	configs.CreateConnection()
+	defer configs.CloseConnection()
+
+	_, err := models.Login("henry2", "1234567")
+	if err != nil {
+		t.Error()
+	}
+
+}
+func TestGetUserByUsername(t *testing.T) {
+	configs.CreateConnection()
+	defer configs.CloseConnection()
+	nameFile, err := models.GetUserByUsername("henry2")
+	if err != nil {
+		t.Error(err)
+	} else {
+		t.Log(nameFile)
+	}
 }
 
 /*func TestUpdateOrders(t *testing.T) {
@@ -18,12 +39,7 @@ func TestConnection(t *testing.T) {
 	defer configs.CloseConnection()
 
 }*/
-func TestUpdateOrders(t *testing.T) {
-	configs.CreateConnection()
 
-	handlers.UpdateStatusOrder("2653824680096", "WERM", "received")
-	defer configs.CloseConnection()
-}
 func TestCreateCsvOrderByProvider(t *testing.T) {
 	configs.CreateConnection()
 	defer configs.CloseConnection()
