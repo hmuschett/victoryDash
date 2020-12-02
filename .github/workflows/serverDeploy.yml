@@ -24,14 +24,15 @@ jobs:
     - uses: actions/checkout@v2
    
 
-     - name: Generate build files
-        uses: thatisuday/go-cross-build@v1.1.0
-        with:
-            platforms: 'linux/amd64'
-            package: 'victorydash'
-            name: 'app'
-            compress: 'false'
-            dest: ''
+    - name: Generate build files
+      uses: thatisuday/go-cross-build@v1.1.0
+      with:
+          platforms: 'linux/amd64'
+          package: 'victorydash'
+          name: 'app'
+          compress: 'false'
+          dest: 'dist'
+
     # - name: Set up Go 1.13
       #uses: actions/setup-go@v1
       #with: 
