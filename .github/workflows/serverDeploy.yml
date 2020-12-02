@@ -25,6 +25,8 @@ jobs:
       uses: actions/setup-go@v1
       with: 
         go-version: 1.13
+    - name: Build
+        run: make build
       #id: go
 
     #- name: Build app 
@@ -35,10 +37,7 @@ jobs:
     #  run: |
     #     export PATH=$PATH:$/root/go/bin:/usr/local/go/bin
 
-    - name: Build
-				env:
-					GOPROXY: "https://proxy.golang.org"
-        run: go build -o app main.go
+
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
       with:
