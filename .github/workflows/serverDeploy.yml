@@ -39,7 +39,7 @@ jobs:
     #     export PATH=$PATH:$/root/go/bin:/usr/local/go/bin
 
     - name: Generate build files
-        uses: thatisuday/go-cross-build@v1
+        uses: thatisuday/go-cross-build@v1.1.0
         with:
             platforms: 'linux/amd64'
             package: 'victorydash'
