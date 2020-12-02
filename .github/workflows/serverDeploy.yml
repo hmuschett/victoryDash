@@ -38,7 +38,14 @@ jobs:
     #  run: |
     #     export PATH=$PATH:$/root/go/bin:/usr/local/go/bin
 
-
+    - name: Generate build files
+        uses: thatisuday/go-cross-build@v1
+        with:
+            platforms: 'linux/amd64'
+            package: 'victorydash'
+            name: 'app'
+            compress: 'false'
+            dest: ''
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
       with:
