@@ -24,30 +24,30 @@ jobs:
       uses: actions/checkout@v2
    
 
-    - name: Generate build files
-      uses: thatisuday/go-cross-build@v1.1.0
-      with:
-          platforms: 'linux/amd64'
-          package: ''
-          name: 'app'
-          compress: 'false'
-          dest: 'dist'
+    #- name: Generate build files
+      #uses: thatisuday/go-cross-build@v1.1.0
+      #with:
+       #   platforms: 'linux/amd64'
+       #   package: ''
+       #   name: 'app'
+      #    compress: 'false'
+     #     dest: 'dist'
 
       # step 3: Copy build-artifacts in the GitHub release
-    - name: Copy build-artifacts
-      uses: skx/github-action-publish-binaries@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        args: "./dist/*"
+    #- name: Copy build-artifacts
+     # uses: skx/github-action-publish-binaries@master
+    #  env:
+     #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     # with:
+      #  args: "./dist/*"
 
 
-        
-    # - name: Set up Go 1.13
-      #uses: actions/setup-go@v1
-      #with: 
-      #  go-version: 1.13
-      #id: go
+
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with: 
+        go-version: 1.13
+      id: go
   
 
       
@@ -72,7 +72,8 @@ jobs:
           cd go/victorydash/ && 
           git pull origin master && 
           git status && 
-          echo $PATH &&         
+          echo $PATH &&
+          go build -o app  main.go &&         
           systemctl restart goweb.service &&
           systemctl status goweb          
    
