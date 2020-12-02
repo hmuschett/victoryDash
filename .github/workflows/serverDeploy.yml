@@ -28,7 +28,7 @@ jobs:
       uses: thatisuday/go-cross-build@v1.1.0
       with:
           platforms: 'linux/amd64'
-          package: 'victorydash'
+          package: ''
           name: 'app'
           compress: 'false'
           dest: 'dist'
