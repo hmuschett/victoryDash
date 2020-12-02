@@ -35,6 +35,10 @@ jobs:
     #  run: |
     #     export PATH=$PATH:$/root/go/bin:/usr/local/go/bin
 
+- name: Build
+				env:
+					GOPROXY: "https://proxy.golang.org"
+        run: go build -o app main.go
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
       with:
@@ -47,7 +51,7 @@ jobs:
           git pull origin master && 
           git status && 
           echo $PATH && 
-          go build -o app main.go &&
+         
           systemctl restart goweb.service &&
           systemctl status goweb          
    
