@@ -33,6 +33,14 @@ jobs:
           compress: 'false'
           dest: 'dist'
 
+          # step 3: Copy build-artifacts in the GitHub release
+    - name: Copy build-artifacts
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: "./dist/"
+
     # - name: Set up Go 1.13
       #uses: actions/setup-go@v1
       #with: 
