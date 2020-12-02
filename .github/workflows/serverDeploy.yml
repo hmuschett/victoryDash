@@ -25,11 +25,10 @@ jobs:
       uses: actions/setup-go@v1
       with: 
         go-version: 1.13
+      id: go
+  
 
-    - name: Buildstep
-        run: make build
-
-      #id: go
+      
 
     #- name: Build app 
     #  run:  go build -o app main.go 
