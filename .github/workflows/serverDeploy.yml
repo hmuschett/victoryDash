@@ -49,8 +49,7 @@ jobs:
         go-version: 1.13
       id: go
   
-    - name: Create GitHub Release h
-        id: create_release
+    - name: Create GitHub Release h        
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
