@@ -57,7 +57,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
      
-      
+    - name: Upload assets
+      uses: actions/upload-artifact@v2
+      with:
+        name: app
+        path: dist/*
 
     #- name: Build app 
     #  run:  go build -o app main.go 
