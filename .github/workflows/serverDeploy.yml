@@ -55,12 +55,10 @@ jobs:
     #    version: latest
     #    args: release --rm-dist
     #  env:
-    #    GITHUB_TOKEN: ${{ secrets.GO_RELEASER_GITHUB_TOKEN }}
-     
-    
+    #    GITHUB_TOKEN: ${{ secrets.GO_RELEASER_GITHUB_TOKEN }}     
 
     - name: Build app 
-      run: go build -o app main.go 
+      run: go build .
 
      - name: SCP to Ocean
         uses: appleboy/scp-action@master
