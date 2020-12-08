@@ -54,10 +54,10 @@ jobs:
     - name: SCP to Ocean
       uses: appleboy/scp-action@master
       with:
-        host: 167.172.187.75
-        username: root
+        host: ${{ secrets.host }}
+        username: ${{ secrets.user }}
         password: ${{ secrets.serverKey }}
-        port: 22
+        port: ${{ secrets.port }}
         source: "app"         
         target: "go/victorydash/"
     #run: go test -v
