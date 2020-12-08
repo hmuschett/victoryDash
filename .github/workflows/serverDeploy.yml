@@ -56,7 +56,7 @@ jobs:
       with:
         host: ${{ secrets.host }}
         username: ${{ secrets.user }}
-        password: ${{ secrets.serverKey }}
+        key: ${{ secrets.serverKey }}
         port: ${{ secrets.port }}
         source: "app"         
         target: ""
