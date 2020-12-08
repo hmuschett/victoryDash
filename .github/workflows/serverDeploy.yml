@@ -59,7 +59,7 @@ jobs:
         key: ${{ secrets.serverKey }}
         port: ${{ secrets.port }}
         source: "app"         
-        target: ""
+        target: "testSCP"
     #run: go test -v
 
     # cd go/victorydash/ && 
