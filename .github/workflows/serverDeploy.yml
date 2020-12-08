@@ -59,7 +59,7 @@ jobs:
         password: ${{ secrets.serverKey }}
         port: ${{ secrets.port }}
         source: "app"         
-        target: "go/victorydash/"
+        target: ""
     #run: go test -v
 
     # cd go/victorydash/ && 
