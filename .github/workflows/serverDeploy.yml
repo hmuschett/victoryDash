@@ -60,7 +60,7 @@ jobs:
     
 
     - name: Build app 
-      run:  go build -o app main.go 
+        run:  go build -o app main.go 
 
      - name: SCP to Ocean
         uses: appleboy/scp-action@master
