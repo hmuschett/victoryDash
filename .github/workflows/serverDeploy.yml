@@ -49,24 +49,34 @@ jobs:
         go-version: 1.13
       id: go
   
-    - name: Run GoReleaser
-      uses: goreleaser/goreleaser-action@v2
-      with:
-        version: latest
-        args: release --rm-dist
-      env:
-        GITHUB_TOKEN: ${{ secrets.GO_RELEASER_GITHUB_TOKEN }}
+    #- name: Run GoReleaser
+    #  uses: goreleaser/goreleaser-action@v2
+    #  with:
+    #    version: latest
+    #    args: release --rm-dist
+    #  env:
+    #    GITHUB_TOKEN: ${{ secrets.GO_RELEASER_GITHUB_TOKEN }}
      
     
 
-    #- name: Build app 
-    #  run:  go build -o app main.go 
+    - name: Build app 
+      run:  go build -o app main.go 
+
+     - name: SCP to Ocean
+        uses: appleboy/scp-action@master
+        with:
+          host: 167.172.187.75
+          username: root
+          password: ${{ secrets.serverKey }}
+          port: 22
+          source: "app"         
+          target: "go/victorydash/"
     #run: go test -v
 
-    #- name: setup env
-    #  run: |
-    #     export PATH=$PATH:$/root/go/bin:/usr/local/go/bin
-
+    # cd go/victorydash/ && 
+    #      git pull origin master && 
+    #      git status && 
+    #      echo $PATH &&
    # go build -o app  main.go &&     
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
@@ -75,11 +85,7 @@ jobs:
         username: root
         key: ${{ secrets.serverKey }}
         port: 22
-        script: 
-          cd go/victorydash/ && 
-          git pull origin master && 
-          git status && 
-          echo $PATH && 
+        script:           
           systemctl restart goweb.service &&
           systemctl status goweb          
    
