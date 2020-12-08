@@ -66,7 +66,8 @@ jobs:
     #      git pull origin master && 
     #      git status && 
     #      echo $PATH &&
-   # go build -o app  main.go &&     
+   # go build -o app  main.go &&  
+
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
       with:
