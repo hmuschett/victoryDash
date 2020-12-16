@@ -2,3 +2,5 @@
 files/*
 air 
 /tmp
+server.crt
+server.key
