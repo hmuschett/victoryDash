@@ -37,7 +37,7 @@ jobs:
         host: ${{ secrets.host }}
         username: ${{ secrets.user }}
         key: ${{ secrets.serverKey }}
-        port: 
+        port: ${{ secrets.port }}
         source: "app"         
         target: "go/victorydash/"
     - name: Deploy and rebuild on server
