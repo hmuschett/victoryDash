@@ -39,8 +39,7 @@ jobs:
         key: ${{ secrets.serverKey }}
         port: 
         source: "app"         
-        target: "go/victorydash/"    
-
+        target: "go/victorydash/"
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
       with:
