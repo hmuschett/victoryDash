@@ -15,7 +15,7 @@ import (
 //Login function login in to the app
 func Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Cookie("victory_session"))
-	utils.EnableCors(&w)
+	utils.EnableCors(w)
 
 	if r.Method == "POST" {
 		user := &models.User{}

@@ -33,7 +33,7 @@ func GetOrdersFromShopify() goshopify.OrdersResource {
 
 //UpDateOrders get Orders from Shopify and update in our database
 func UpDateOrders(w http.ResponseWriter, r *http.Request) {
-	utils.EnableCors(&w)
+	utils.EnableCors(w)
 	url := configs.GetUrlShopOrders()
 	orders := goshopify.OrdersResource{}
 	err := getJSON(url, &orders)
@@ -129,7 +129,7 @@ func GetOrdersWERM() (goshopify.OrdersResource, error) {
 
 //GetOrders from Werm return last 10 order
 func GetOrders(w http.ResponseWriter, r *http.Request) {
-	utils.EnableCors(&w)
+	utils.EnableCors(w)
 	Orders, _ := GetOrdersWERM()
 	models.SendData(w, Orders)
 	/*if utils.IsAuthenticated(r) {
@@ -143,7 +143,7 @@ func GetOrders(w http.ResponseWriter, r *http.Request) {
 
 //SendMails from arr of id_sopify send to
 func SendMails(w http.ResponseWriter, r *http.Request) {
-	utils.EnableCors(&w)
+	utils.EnableCors(w)
 	var results map[string]interface{}
 	body, _ := ioutil.ReadAll(r.Body)
 	if err := json.Unmarshal(body, &results); err != nil {
@@ -172,7 +172,7 @@ func SendMails(w http.ResponseWriter, r *http.Request) {
 
 //SetStatus set the status order by order ID
 func SetStatus(w http.ResponseWriter, r *http.Request) {
-	utils.EnableCors(&w)
+	utils.EnableCors(w)
 	var results map[string]interface{}
 	body, _ := ioutil.ReadAll(r.Body)
 	if err := json.Unmarshal(body, &results); err != nil {
