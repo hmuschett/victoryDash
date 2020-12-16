@@ -90,6 +90,11 @@ func GetUrlShopOrders() string {
 	return os.Getenv("SHOP_ORDERS")
 }
 
+//GetCorsOrgin allowed from env
+func GetCorsOrgin() string {
+	return os.Getenv("CORS_ORIGIN")
+}
+
 //GetMailConfig return
 func GetMailConfig() ClientMail {
 	return *m

@@ -23,26 +23,6 @@ jobs:
     - name: Checkout the repository
       uses: actions/checkout@v2
    
-
-    #- name: Generate build files
-      #uses: thatisuday/go-cross-build@v1.1.0
-      #with:
-       #   platforms: 'linux/amd64'
-       #   package: ''
-       #   name: 'app'
-      #    compress: 'false'
-     #     dest: 'dist'
-
-      # step 3: Copy build-artifacts in the GitHub release
-    #- name: Copy build-artifacts
-     # uses: skx/github-action-publish-binaries@master
-    #  env:
-     #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-     # with:
-      #  args: "./dist/*"
-
-
-
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
       with: 
@@ -57,24 +37,17 @@ jobs:
         host: ${{ secrets.host }}
         username: ${{ secrets.user }}
         key: ${{ secrets.serverKey }}
-        port: ${{ secrets.port }}
+        port: 
         source: "app"         
-        target: "testSCP"
-    #run: go test -v
-
-    # cd go/victorydash/ && 
-    #      git pull origin master && 
-    #      git status && 
-    #      echo $PATH &&
-   # go build -o app  main.go &&  
+        target: "go/victorydash/"    
 
     - name: Deploy and rebuild on server
       uses: appleboy/ssh-action@master
       with:
-        host: 167.172.187.75
-        username: root
+        host: ${{ secrets.host }}
+        username: ${{ secrets.user }}
         key: ${{ secrets.serverKey }}
-        port: 22
+        port: ${{ secrets.port }}
         script:           
           systemctl restart goweb.service &&
           systemctl status goweb          
