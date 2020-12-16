@@ -14,6 +14,7 @@ import (
 	"time"
 	"victorydash/configs"
 	"victorydash/models"
+	"victorydash/utils"
 
 	goshopify "github.com/bold-commerce/go-shopify"
 )
@@ -32,6 +33,7 @@ func GetOrdersFromShopify() goshopify.OrdersResource {
 
 //UpDateOrders get Orders from Shopify and update in our database
 func UpDateOrders(w http.ResponseWriter, r *http.Request) {
+	utils.EnableCors(&w)
 	url := configs.GetUrlShopOrders()
 	orders := goshopify.OrdersResource{}
 	err := getJSON(url, &orders)
@@ -103,6 +105,7 @@ func SaveOrder(order goshopify.Order) int64 {
 
 //GetOrdersWERM return last 10 order
 func GetOrdersWERM() (goshopify.OrdersResource, error) {
+
 	orderResourse := goshopify.OrdersResource{}
 	err := error(nil)
 	query := `SELECT name_shopify,  id_shopify, send_provider, subtotal_price, status
@@ -126,7 +129,7 @@ func GetOrdersWERM() (goshopify.OrdersResource, error) {
 
 //GetOrders from Werm return last 10 order
 func GetOrders(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
+	utils.EnableCors(&w)
 	Orders, _ := GetOrdersWERM()
 	models.SendData(w, Orders)
 	/*if utils.IsAuthenticated(r) {
@@ -140,7 +143,7 @@ func GetOrders(w http.ResponseWriter, r *http.Request) {
 
 //SendMails from arr of id_sopify send to
 func SendMails(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
+	utils.EnableCors(&w)
 	var results map[string]interface{}
 	body, _ := ioutil.ReadAll(r.Body)
 	if err := json.Unmarshal(body, &results); err != nil {
@@ -169,7 +172,7 @@ func SendMails(w http.ResponseWriter, r *http.Request) {
 
 //SetStatus set the status order by order ID
 func SetStatus(w http.ResponseWriter, r *http.Request) {
-	enableCors(&w)
+	utils.EnableCors(&w)
 	var results map[string]interface{}
 	body, _ := ioutil.ReadAll(r.Body)
 	if err := json.Unmarshal(body, &results); err != nil {
@@ -302,10 +305,4 @@ func getJSON(url string, target interface{}) error {
 	defer r.Body.Close()
 
 	return json.NewDecoder(r.Body).Decode(target)
-}
-func enableCors(w *http.ResponseWriter) {
-	//(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:5000")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
