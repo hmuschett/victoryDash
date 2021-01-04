@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	goshopify "github.com/bold-commerce/go-shopify"
 	_ "github.com/go-sql-driver/mysql" //driver don connection
 	"github.com/joho/godotenv"
 )
@@ -29,6 +30,8 @@ var (
 	db           *sql.DB
 	dbConenction *databaseConenction
 	m            *ClientMail
+	appShop      goshopify.App
+	clientShop   *goshopify.Client
 )
 
 func init() {
@@ -54,6 +57,12 @@ func init() {
 	m.mail = os.Getenv("CLIENT_MAIL")
 	m.server = os.Getenv("SERVER_MAIL")
 	m.password = os.Getenv("PASS_MAIL")
+
+	appShop = goshopify.App{
+		ApiKey:   os.Getenv("SHOP_APIKEY"),
+		Password: os.Getenv("SHOP_API_PASSWORD"),
+	}
+	clientShop = goshopify.NewClient(appShop, "victoryswitzerland", "", goshopify.WithVersion("2020-10"))
 
 }
 
@@ -95,9 +104,19 @@ func GetCorsOrgin() string {
 	return os.Getenv("CORS_ORIGIN")
 }
 
+//GetEnv envairoment from env
+func GetEnv() string {
+	return os.Getenv("ENV")
+}
+
 //GetMailConfig return
 func GetMailConfig() ClientMail {
 	return *m
+}
+
+//GetClientShop sopify cliente connetion
+func GetClientShop() *goshopify.Client {
+	return clientShop
 }
 func generateConectionURL() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", dbConenction.username, dbConenction.password, dbConenction.host, dbConenction.port, dbConenction.dbName)

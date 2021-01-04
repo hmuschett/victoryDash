@@ -43,7 +43,7 @@ func SendMailForWermProvider(pathFile string) {
 	fmt.Println(m.server + " " + m.mail + " " + m.password)
 	me := email.NewMessage("this is the sugget", "and this is the bbody email")
 	me.From = mail.Address{Name: "From", Address: m.mail}
-	me.To = []string{"hmuschett@gmail.com", "osmel@victoryswitzerland.com"}
+	me.To = []string{"hmuschett@gmail.com", "osmel@victoryswitzerland.com"} //, "osmel@victoryswitzerland.com"
 
 	err := me.Attach(pathFile)
 	if err != nil {
