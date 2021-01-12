@@ -163,12 +163,12 @@ func CreateDennerXML(id string) (string, error) {
 		structData.Invoice.LineItem[i].Tax.Amount.Currency = models.Currency
 
 	}
-
-	structData.Invoice.Summary.InvoiceAmount.Amount.Data = fmt.Sprintf("%.2f", tAmount)
+	tt := tAmount + tTax
+	structData.Invoice.Summary.InvoiceAmount.Amount.Data = fmt.Sprintf("%.2f", tt)
 	structData.Invoice.Summary.VatAmount.Amount.Data = fmt.Sprintf("%.2f", tTax)
-	extD := tAmount - tTax
-	structData.Invoice.Summary.ExtendedAmount.Amount.Data = fmt.Sprintf("%.2f", extD)
-	structData.Invoice.Summary.Tax.TaxBasis.Amount.Data = fmt.Sprintf("%.2f", extD)
+	//extD := tAmount - tTax
+	structData.Invoice.Summary.ExtendedAmount.Amount.Data = fmt.Sprintf("%.2f", tAmount)
+	structData.Invoice.Summary.Tax.TaxBasis.Amount.Data = fmt.Sprintf("%.2f", tAmount)
 	structData.Invoice.Summary.Tax.Rate.Data = "7.7"
 	structData.Invoice.Summary.Tax.Amount.Data = fmt.Sprintf("%.2f", tTax)
 
