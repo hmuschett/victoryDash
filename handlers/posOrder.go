@@ -77,10 +77,6 @@ func CreateDennerXML(id string) (string, error) {
 		return "", err2
 	}
 	structData := models.NewDennerInvoice()
-
-	fmt.Println(o.OrderNumber)
-	fmt.Println(o.UserId)
-	fmt.Println(o.SourceIdentifier)
 	dt := time.Now()
 
 	structData.Interchange.IcRef = int64(o.OrderNumber)
@@ -174,7 +170,7 @@ func CreateDennerXML(id string) (string, error) {
 	structData.Invoice.Summary.ExtendedAmount.Amount.Data = fmt.Sprintf("%.2f", extD)
 	structData.Invoice.Summary.Tax.TaxBasis.Amount.Data = fmt.Sprintf("%.2f", extD)
 	structData.Invoice.Summary.Tax.Rate.Data = "7.7"
-	structData.Invoice.Summary.Tax.Amount.Data = fmt.Sprintf("%.2f", tAmount)
+	structData.Invoice.Summary.Tax.Amount.Data = fmt.Sprintf("%.2f", tTax)
 
 	//fmt.Println(structData)
 	file, err := xml.MarshalIndent(structData, "", " ")
@@ -186,7 +182,8 @@ func CreateDennerXML(id string) (string, error) {
 	if err != nil {
 		log.Println(err)
 	}
-	nameFile := path + "/files/test.xml"
+	sOrderN := strconv.Itoa(o.OrderNumber)
+	nameFile := path + "/files/" + sOrderN + "_VICTORY.xml"
 	_ = ioutil.WriteFile(nameFile, file, 0644)
 	fmt.Println("Created sussefull")
 	return nameFile, nil

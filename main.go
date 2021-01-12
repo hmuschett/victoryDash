@@ -45,7 +45,7 @@ func main() {
 		templates.ExecuteTemplate(w, "index.html", Orders)
 	}).Methods("GET")
 
-	mux.HandleFunc("/api/v1/user/login", handlers.Login).Methods("GET", "POST")
+	mux.HandleFunc("/api/v1/user/login", handlers.Login).Methods("POST")
 
 	mux.HandleFunc("/api/v1/order/orders", handlers.GetOrders).Methods("GET")
 	mux.HandleFunc("/api/v1/order/ordersmails", handlers.SendMails).Methods("POST")
