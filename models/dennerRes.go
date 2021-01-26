@@ -200,17 +200,17 @@ type Summary struct {
 type InvoiceAmount struct {
 	XMLName     xml.Name `xml:"INVOICE-AMOUNT"`
 	PrintStatus string   `xml:"Print-Status,attr"`
-	Amount      Amount   `xml:"AMOUNT"`
+	Amount      Amount   `xml:"Amount"`
 }
 type VatAmount struct {
 	XMLName     xml.Name `xml:"VAT-AMOUNT"`
 	PrintStatus string   `xml:"Print-Status,attr"`
-	Amount      Amount   `xml:"AMOUNT"`
+	Amount      Amount   `xml:"Amount"`
 }
 type ExtendedAmount struct {
 	XMLName xml.Name `xml:"EXTENDED-AMOUNT"`
 	Type    string   `xml:"type,attr"`
-	Amount  Amount   `xml:"AMOUNT"`
+	Amount  Amount   `xml:"Amount"`
 }
 type PaymentTerms struct {
 	XMLName xml.Name `xml:"PAYMENT-TERMS"`
