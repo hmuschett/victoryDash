@@ -142,7 +142,7 @@ type LineItem struct {
 	Tax           Tax           `xml:"TAX"`
 }
 type ItemID struct {
-	XMLName xml.Name `xml:"ITEM-ID"`
+	XMLName xml.Name `xml:"Item-Id"`
 	Data    string   `xml:",chardata"`
 	Type    string   `xml:"Type,attr"`
 }
