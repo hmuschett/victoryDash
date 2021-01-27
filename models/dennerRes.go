@@ -95,7 +95,7 @@ type Biller struct {
 	BankInfo    BankInfo
 }
 type DocReferenc struct {
-	XMLName     xml.Name `xml:"Doc-Referenc"`
+	XMLName     xml.Name `xml:"Doc-Reference"`
 	DocReferenc string   `xml:",chardata"`
 	Type        string   `xml:"Type,attr"`
 }
@@ -209,7 +209,7 @@ type VatAmount struct {
 }
 type ExtendedAmount struct {
 	XMLName xml.Name `xml:"EXTENDED-AMOUNT"`
-	Type    string   `xml:"type,attr"`
+	Type    string   `xml:"Type,attr"`
 	Amount  Amount   `xml:"Amount"`
 }
 type PaymentTerms struct {
