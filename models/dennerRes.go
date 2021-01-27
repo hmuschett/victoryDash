@@ -259,7 +259,7 @@ const (
 	Xvalue             = "26638200400000000000"
 	Currency           = "CHF"
 	printStatus        = "25"
-	typeExtendedAmount = "25"
+	typeExtendedAmount = "79"
 	RateCategory       = "S"
 	typeBasicTerms     = "1"
 	typePayment        = "ESR"
