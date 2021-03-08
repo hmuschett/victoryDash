@@ -54,8 +54,9 @@ func main() {
 
 	mux.HandleFunc("/api/v1/posorder/orders", handlers.GetPOSOrders).Methods("GET")
 	mux.HandleFunc("/api/v1/posorder/ordersmails", handlers.SendMailPOSOrders).Methods("POST")
+	mux.HandleFunc("/api/v1/posorder/refoundorder", handlers.SendMailPOSRefoundOrders).Methods("POST")
 
-	if configs.GetEnv() == "dev77" {
+	if configs.GetEnv() == "dev" {
 		log.Fatal(http.ListenAndServe(configs.GetPort(), mux))
 	} else {
 
