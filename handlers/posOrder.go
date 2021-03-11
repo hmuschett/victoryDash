@@ -54,14 +54,14 @@ func SendMailPOSOrders(w http.ResponseWriter, r *http.Request) {
 
 	xml, err := CreateDennerXML(orderID) //models.SendData(w, orders)
 
-	fmt.Println(xml)
 	fmt.Println("el nombre del XML es: " + xml)
 	if err != nil {
-		//log.Panicln(err)
+		log.Println(err)
 		results["No"] = "las ordenes selecionas no tienen productos para el proveedor  "
 	} else {
 		//mandar el csv adjunto en un correo
 		go configs.SendMailForWermProvider(xml)
+		go configs.CopyFileToAS2(xml)
 	}
 
 	models.SendData(w, results)
@@ -205,7 +205,6 @@ func SendMailPOSRefoundOrders(w http.ResponseWriter, r *http.Request) {
 
 	xml, err := CreateDennerXMLRefound(orderID) //models.SendData(w, orders)
 
-	fmt.Println(xml)
 	fmt.Println("el nombre del XML es: " + xml)
 	if err != nil {
 		//log.Panicln(err)

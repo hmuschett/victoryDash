@@ -109,6 +109,27 @@ func GetEnv() string {
 	return os.Getenv("ENV")
 }
 
+//GetRSAPath envairoment from env
+func GetRSAPath() string {
+	return os.Getenv("KEY_RSA_PATH")
+}
+
+//GetPathInAS2 envairoment from env
+func GetPathInAS2() string {
+
+	return os.Getenv("PATH_IN_AS2")
+}
+
+//GetServerAS2 envairoment from env
+func GetServerAS2() string {
+	return os.Getenv("SERVER_AS2")
+}
+
+//GetUserServerAS2  envairoment from env
+func GetUserServerAS2() string {
+	return os.Getenv("USER_SERVER_AS2")
+}
+
 //GetMailConfig return
 func GetMailConfig() ClientMail {
 	return *m
@@ -118,6 +139,7 @@ func GetMailConfig() ClientMail {
 func GetClientShop() *goshopify.Client {
 	return clientShop
 }
+
 func generateConectionURL() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", dbConenction.username, dbConenction.password, dbConenction.host, dbConenction.port, dbConenction.dbName)
 }

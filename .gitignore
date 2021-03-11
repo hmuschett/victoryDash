@@ -4,3 +4,4 @@ air
 /tmp
 server.crt
 server.key
+id_rsa
