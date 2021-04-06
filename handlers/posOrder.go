@@ -238,6 +238,7 @@ func CreateDennerXMLRefound(id string) (string, error) {
 	}
 
 	structData.Interchange.IcRef = int64(o.OrderNumber)
+	structData.Invoice.Type = "EGS"
 	structData.Invoice.Header.MessageReference.ReferenceDate.Date.Date = dt.Format("20060102")
 	structData.Invoice.Header.MessageReference.ReferenceDate.ReferenceNo = decimal.NewFromFloat(float64(o.OrderNumber) + 0.7).String()
 	structData.Invoice.Header.PrintDate.Date.Date = dt.Format("20060102")
