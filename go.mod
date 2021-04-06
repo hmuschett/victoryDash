@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/bold-commerce/go-shopify v2.3.0+incompatible
+	github.com/bramvdbogaerde/go-scp v0.0.0-20201229172121-7a6c0268fa67
 	github.com/cespare/reflex v0.2.0 // indirect
 	github.com/cosmtrek/air v1.12.1 // indirect
 	github.com/creack/pty v1.1.11 // indirect

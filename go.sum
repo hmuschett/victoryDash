@@ -1,6 +1,8 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/bold-commerce/go-shopify v2.3.0+incompatible h1:AiedLiOoFWp7iVO8n6JJOM7IEdyU4nLAvUKNM7Hw8b4=
 github.com/bold-commerce/go-shopify v2.3.0+incompatible/go.mod h1:R9OKSw+EViwy7MGrAxma3q+Vqq8kMyZu+OJhx/dcw6s=
+github.com/bramvdbogaerde/go-scp v0.0.0-20201229172121-7a6c0268fa67 h1:fZyMQbC1LQwstaCpifWDvTpcC0oGqsvHvIaU3cDbLSU=
+github.com/bramvdbogaerde/go-scp v0.0.0-20201229172121-7a6c0268fa67/go.mod h1:aiQFnN5G0MivefWD+J4Em1a+CDyu/UBEmbNP5+8Gtd4=
 github.com/cespare/reflex v0.2.0 h1:6d9WpWJseKjJvZEevKP7Pk42nPx2+BUTqmhNk8wZPwM=
 github.com/cespare/reflex v0.2.0/go.mod h1:ooqOLJ4algvHP/oYvKWfWJ9tFUzCLDk5qkIJduMYrgI=
 github.com/cosmtrek/air v1.12.1 h1:5YnQHF0a09Yt8vNWYtK3CtlR8aodV4w23Iz+fLSDLE4=

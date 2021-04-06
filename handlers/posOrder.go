@@ -26,6 +26,7 @@ const parameters = `<?xml version="1.0" encoding="iso-8859-1"?>
 
 //GetPOSOrders return the las 10 orders from POS
 func GetPOSOrders(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("estoy aqui")
 	utils.EnableCors(w)
 	options := struct {
 		Limit      string `url:"limit,omitempty,comma"`
@@ -374,13 +375,19 @@ func calculatePriceEPVariant(orders []goshopify.Order) []goshopify.Order {
 				fmt.Println(err2)
 				continue
 			}
+
 			var variantPrice *decimal.Decimal
 			var variantRate *decimal.Decimal
 
 			for _, v := range pro.Variants {
 				if v.Title == "EP" {
 					variantPrice = v.Price
-					variantRate = p.TaxLines[0].Rate
+					if len(p.TaxLines) == 0 {
+						ra, _ := decimal.NewFromString("0.077")
+						variantRate = &ra
+					} else {
+						variantRate = p.TaxLines[0].Rate
+					}
 				}
 			}
 

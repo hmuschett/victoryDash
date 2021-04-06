@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
 
@@ -50,9 +49,14 @@ func SendData(w http.ResponseWriter, data interface{}) {
 	response.Send()
 }
 func (response *Response) Send() {
-	response.writer.Header().Set("content-type", "application/json")
+	output, err := json.Marshal(&response)
+	if err != nil {
+		http.Error(response.writer, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	response.writer.Header().Set("Content-Type", "application/json")
 	response.writer.WriteHeader(response.Status)
 
-	output, _ := json.Marshal(&response)
-	fmt.Fprintf(response.writer, string(output))
+	//	fmt.Fprintf(response.writer, string(output))
+	response.writer.Write(output)
 }
