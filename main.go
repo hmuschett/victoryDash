@@ -93,7 +93,8 @@ func main() {
 			Cache:      autocert.DirCache("certs"),                           //Folder for storing certificates
 		}
 		server := &http.Server{
-			Addr: ":https",
+			Addr:    ":https",
+			Handler: mux,
 			TLSConfig: &tls.Config{
 				GetCertificate: certManager.GetCertificate,
 			},
