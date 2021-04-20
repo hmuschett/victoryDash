@@ -12,6 +12,7 @@ import (
 
 	goshopify "github.com/bold-commerce/go-shopify"
 	"github.com/gorilla/mux"
+	"golang.org/x/crypto/acme/autocert"
 )
 
 var templates = template.Must(template.ParseGlob("templates/*.html"))
@@ -58,7 +59,7 @@ func main() {
 
 	if configs.GetEnv() == "dev" {
 		log.Fatal(http.ListenAndServe(configs.GetPort(), mux))
-	} else {
+	} else if false {
 
 		cfg := &tls.Config{
 			MinVersion:               tls.VersionTLS12,
@@ -85,6 +86,22 @@ func main() {
 		}
 
 		log.Fatal(srv.ListenAndServeTLS("server.crt", "server.key"))
+	} else {
+		certManager := autocert.Manager{
+			Prompt:     autocert.AcceptTOS,
+			HostPolicy: autocert.HostWhitelist("api.victoryswitzerland.com"), //Your domain here
+			Cache:      autocert.DirCache("certs"),                           //Folder for storing certificates
+		}
+		server := &http.Server{
+			Addr: ":https",
+			TLSConfig: &tls.Config{
+				GetCertificate: certManager.GetCertificate,
+			},
+		}
+		// serve HTTP, which will redirect automatically to HTTPS
+		go http.ListenAndServe(":http", certManager.HTTPHandler(nil))
+
+		log.Fatal(server.ListenAndServeTLS("", "")) //Key and cert are coming from Let's Encrypt
 	}
 	log.Println("The server is lisening")
 }
