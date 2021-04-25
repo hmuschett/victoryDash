@@ -32,12 +32,23 @@ func GetPOSOrders(w http.ResponseWriter, r *http.Request) {
 		Limit      string `url:"limit,omitempty,comma"`
 		Status     string `url:"status,omitempty,comma"`
 		SourceName string `url:"source_name,omitempty,comma"`
-	}{"10", "any", "pos"}
+		Tag        string `url:"tag,omitempty,comma"`
+	}{"10", "any", "pos", "RECHNUNG_DENNER"}
 
 	orders, err := configs.GetClientShop().Order.List(options)
 	if err != nil {
 		fmt.Println(err)
 	}
+	options.Tag = "GUTSCHRIFT_DENNER"
+	or, err2 := configs.GetClientShop().Order.List(options)
+	if err != nil {
+		fmt.Println(err2)
+	}
+
+	for _, v := range or {
+		orders = append(orders, v)
+	}
+
 	o := calculatePriceEPVariant(orders)
 	models.SendData(w, o)
 }
@@ -84,7 +95,16 @@ func CreateDennerXML(id string) (string, error) {
 
 	structData.Interchange.IcRef = int64(o.OrderNumber)
 	structData.Invoice.Header.MessageReference.ReferenceDate.Date.Date = dt.Format("20060102")
-	structData.Invoice.Header.MessageReference.ReferenceDate.ReferenceNo = decimal.NewFromFloat(float64(o.OrderNumber) + 0.1).String()
+	tags := strings.Split(o.Tags, ",")
+	for _, t := range tags {
+		if t == "RECHNUNG_DENNER" {
+			structData.Invoice.Type = "EFD"
+			structData.Invoice.Header.MessageReference.ReferenceDate.ReferenceNo = decimal.NewFromFloat(float64(o.OrderNumber) + 0.1).String()
+		} else if t == "GUTSCHRIFT_DENNER" {
+			structData.Invoice.Type = "EGS"
+			structData.Invoice.Header.MessageReference.ReferenceDate.ReferenceNo = decimal.NewFromFloat(float64(o.OrderNumber) + 0.7).String()
+		}
+	}
 	structData.Invoice.Header.PrintDate.Date.Date = dt.Format("20060102")
 	structData.Invoice.Header.DeliverydDate.Date.Date = dt.Format("20060102")
 	structData.Invoice.Header.Reference.InvoiceReference.ReferenceDate.ReferenceNo = strconv.Itoa(o.OrderNumber)
@@ -213,6 +233,7 @@ func SendMailPOSRefoundOrders(w http.ResponseWriter, r *http.Request) {
 	} else {
 		//mandar el csv adjunto en un correo
 		go configs.SendMailForWermProvider(xml)
+		go configs.CopyFileToAS2(xml)
 	}
 
 	models.SendData(w, results)
