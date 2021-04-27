@@ -62,13 +62,13 @@ func SendMailPOSOrders(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	orderID := fmt.Sprintf("%v", results["order"])
-	fmt.Println(string(orderID))
+	fmt.Println("esta es la orque se va a procesar", string(orderID))
 
 	xml, err := CreateDennerXML(orderID) //models.SendData(w, orders)
 
 	fmt.Println("el nombre del XML es: " + xml)
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 		results["No"] = "las ordenes selecionas no tienen productos para el proveedor  "
 	} else {
 		//mandar el csv adjunto en un correo
@@ -144,7 +144,12 @@ func CreateDennerXML(id string) (string, error) {
 			}
 			if v.Title == "EP" {
 				variantPrice = v.Price
-				variantRate = p.TaxLines[0].Rate
+				if len(p.TaxLines) > 0 {
+					variantRate = p.TaxLines[0].Rate
+				} else {
+					r, _ := decimal.NewFromString("0.077")
+					variantRate = &r
+				}
 			}
 		}
 
