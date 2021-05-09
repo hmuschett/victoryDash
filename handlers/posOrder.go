@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -15,7 +16,7 @@ import (
 	"victorydash/models"
 	"victorydash/utils"
 
-	goshopify "github.com/bold-commerce/go-shopify"
+	goshopify "github.com/bold-commerce/go-shopify/v3"
 
 	"github.com/shopspring/decimal"
 )
@@ -49,8 +50,13 @@ func GetPOSOrders(w http.ResponseWriter, r *http.Request) {
 		orders = append(orders, v)
 	}
 
+	sort.Slice(orders, func(i, j int) bool {
+		return orders[i].OrderNumber > orders[j].OrderNumber
+	})
+
 	o := calculatePriceEPVariant(orders)
-	models.SendData(w, o)
+	po := getDateToSendAS2(o)
+	models.SendData(w, po)
 }
 
 //SendMailPOSOrders from arr of id_sopify send to
@@ -61,21 +67,45 @@ func SendMailPOSOrders(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(body, &results); err != nil {
 		log.Fatal(err)
 	}
-	orderID := fmt.Sprintf("%v", results["order"])
-	fmt.Println("esta es la orque se va a procesar", string(orderID))
+	orderIDs := fmt.Sprintf("%v", results["order"])
+	ordersArr := strings.Split(orderIDs, ",")
+	fmt.Println("estas son las ordenes que se van a procesar", ordersArr)
 
-	xml, err := CreateDennerXML(orderID) //models.SendData(w, orders)
+	for _, orderID := range ordersArr {
+		xml, err := CreateDennerXML(orderID) //models.SendData(w, orders)
 
-	fmt.Println("el nombre del XML es: " + xml)
-	if err != nil {
-		fmt.Println(err)
-		results["No"] = "las ordenes selecionas no tienen productos para el proveedor  "
-	} else {
-		//mandar el csv adjunto en un correo
-		go configs.SendMailForWermProvider(xml)
-		go configs.CopyFileToAS2(xml)
+		fmt.Println("el nombre del XML es: " + xml)
+		if err != nil {
+			fmt.Println(err)
+			results["No"] = "las ordenes selecionas no tienen productos para el proveedor  "
+		} else {
+			//mandar el csv adjunto en un correo
+			configs.SendMailForWermProvider(xml)
+			configs.CopyFileToAS2(xml)
+
+			err = SaveDateToSenderToAS2(orderID) //save the date to sender a order to AS2 server
+			if err != nil {
+				fmt.Println(err)
+			}
+		}
 	}
+	/* 	xml, err := CreateDennerXML(orderID) //models.SendData(w, orders)
 
+	   	fmt.Println("el nombre del XML es: " + xml)
+	   	if err != nil {
+	   		fmt.Println(err)
+	   		results["No"] = "las ordenes selecionas no tienen productos para el proveedor  "
+	   	} else {
+	   		//mandar el csv adjunto en un correo
+	   		go configs.SendMailForWermProvider(xml)
+	   		//go configs.CopyFileToAS2(xml)
+
+	   		err = SaveDateToSenderToAS2(orderID)
+	   		if err != nil {
+	   			fmt.Println(err)
+	   		}
+	   	}
+	*/
 	models.SendData(w, results)
 }
 
@@ -132,8 +162,10 @@ func CreateDennerXML(id string) (string, error) {
 		structData.Invoice.LineItem[i].ItemID[2].Type = "EN"
 
 		pro, err2 := configs.GetClientShop().Product.Get(p.ProductID, nil)
-		if err2 != nil {
+		fmt.Println(pro)
+		if err2 != nil || pro == nil {
 			fmt.Println(err2)
+			continue
 		}
 		var variantPrice *decimal.Decimal
 		var variantRate *decimal.Decimal
@@ -379,6 +411,13 @@ func CreateDennerXMLRefound(id string) (string, error) {
 	return nameFile, nil
 }
 
+func SaveDateToSenderToAS2(id string) error {
+	query := `INSERT pos_order SET shopify_id = ?, date_send=SYSDATE()`
+	result, _ := configs.Exec(query, id)
+	_, err := result.LastInsertId()
+	return err
+}
+
 func calculateQuantity(units int, amountOfPack string) string {
 	unitsPack := strings.Split(amountOfPack, " ")[1]
 	//fmt.Println(unitsPack)
@@ -393,10 +432,12 @@ func calculateQuantity(units int, amountOfPack string) string {
 //not used to create XML file
 func calculatePriceEPVariant(orders []goshopify.Order) []goshopify.Order {
 	resOrder := orders
-	for i, o := range orders {
+	//for i, o := range orders {
+	for i := 0; i <= 10 && i < len(orders); i++ {
+
 		var tAmount, tTax float64
 
-		for _, p := range o.LineItems {
+		for _, p := range orders[i].LineItems {
 			pro, err2 := configs.GetClientShop().Product.Get(p.ProductID, nil)
 			if err2 != nil {
 				fmt.Println(err2)
@@ -433,6 +474,25 @@ func calculatePriceEPVariant(orders []goshopify.Order) []goshopify.Order {
 		}
 
 		resOrder[i].Reference = fmt.Sprintf("%.2f", tAmount)
+	}
+
+	return resOrder
+}
+func getDateToSendAS2(orders []goshopify.Order) []goshopify.Order {
+	resOrder := orders
+	for i, o := range orders {
+		query := `SELECT date_send FROM pos_order po	
+				WHERE po.shopify_id = ?`
+		rows, err := configs.Query(query, o.ID)
+		if err != nil {
+			fmt.Println("error al hacer la consulta para obtener el shopify_id de la DB ", err)
+		} else if rows.Next() {
+			rows.Scan(&resOrder[i].ProcessedAt)
+			resOrder[i].BrowserIp = resOrder[i].ProcessedAt.Format("01-02-2006 15:04")
+		} else {
+			resOrder[i].BrowserIp = ""
+			//err = errors.New("that Oreder no exist")
+		}
 	}
 	return resOrder
 }

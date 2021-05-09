@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	goshopify "github.com/bold-commerce/go-shopify"
+	goshopify "github.com/bold-commerce/go-shopify/v3"
 	_ "github.com/go-sql-driver/mysql" //driver don connection
 	"github.com/joho/godotenv"
 )
@@ -62,8 +62,7 @@ func init() {
 		ApiKey:   os.Getenv("SHOP_APIKEY"),
 		Password: os.Getenv("SHOP_API_PASSWORD"),
 	}
-	clientShop = goshopify.NewClient(appShop, "victoryswitzerland", "", goshopify.WithVersion("2020-10"))
-
+	clientShop = goshopify.NewClient(appShop, "victoryswitzerland", "", goshopify.WithVersion("2020-10"), goshopify.WithRetry(3))
 }
 
 //CreateConnection to the Data Base
@@ -141,7 +140,7 @@ func GetClientShop() *goshopify.Client {
 }
 
 func generateConectionURL() string {
-	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", dbConenction.username, dbConenction.password, dbConenction.host, dbConenction.port, dbConenction.dbName)
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", dbConenction.username, dbConenction.password, dbConenction.host, dbConenction.port, dbConenction.dbName)
 }
 
 //Exec is the wrapper for db.exec to log is an error
