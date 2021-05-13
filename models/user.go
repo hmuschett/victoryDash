@@ -18,7 +18,7 @@ var users = make(map[int]User)
 //CreateUser in DB
 func (user *User) CreateUser() *User {
 	query := "INSERT users SET username=?, password=?"
-	result, _ := configs.Exec(query, user.Username, user.Password)
+	result, _ := configs.VicExec(query, user.Username, user.Password)
 	user.ID, _ = result.LastInsertId()
 	return user
 }
@@ -28,7 +28,7 @@ func GetUserByID(ID int64) (User, error) {
 	user := User{}
 	err := error(nil)
 	query := "SELECT id, username, password FROM users u WHERE u.id=?"
-	rows, _ := configs.Query(query, ID)
+	rows, _ := configs.VicQuery(query, ID)
 	if rows.Next() {
 		rows.Scan(&user.ID, &user.Username, &user.Password)
 	} else {
@@ -42,7 +42,7 @@ func GetUserByUsername(username string) (User, error) {
 	user := User{}
 	err := error(nil)
 	query := "SELECT id, username, password FROM users u WHERE u.username=?"
-	rows, _ := configs.Query(query, username)
+	rows, _ := configs.VicQuery(query, username)
 	if rows.Next() {
 		rows.Scan(&user.ID, &user.Username, &user.Password)
 	} else {
@@ -64,7 +64,7 @@ func Login(username, password string) (User, error) {
 func GetUsers() Users {
 	users := Users{}
 	query := "SELECT id, username, password FROM users"
-	rows, _ := configs.Query(query)
+	rows, _ := configs.VicQuery(query)
 	for rows.Next() {
 		user := User{}
 		rows.Scan(&user.ID, &user.Username, &user.Password)
@@ -76,13 +76,13 @@ func GetUsers() Users {
 //UpDateUser in DB
 func UpDateUser(user User) error {
 	query := "UPDATE users u SET u.username=?, u.password=? where u.id =?"
-	_, err := configs.Query(query, user.Username, user.Password, user.ID)
+	_, err := configs.VicQuery(query, user.Username, user.Password, user.ID)
 	return err
 }
 
 //DeleteUser in DB
 func DeleteUser(ID int) error {
 	query := "DELETE FROM users u where u.id =?"
-	_, err := configs.Query(query, ID)
+	_, err := configs.VicQuery(query, ID)
 	return err
 }

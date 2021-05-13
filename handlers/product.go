@@ -12,7 +12,7 @@ import (
 func InsertProduct(orderID int64, product goshopify.LineItem) {
 	query := "INSERT vic.product_order SET  order_id=?, sku=?, vendor=?, quantity=?"
 	quantity := product.Quantity * getQuantiOfPack(product.VariantTitle)
-	configs.Exec(query, orderID, product.SKU, product.Vendor, quantity)
+	configs.VicExec(query, orderID, product.SKU, product.Vendor, quantity)
 }
 
 func getQuantiOfPack(str string) (result int) {

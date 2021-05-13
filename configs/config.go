@@ -4,12 +4,14 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
 
 	goshopify "github.com/bold-commerce/go-shopify/v3"
-	_ "github.com/go-sql-driver/mysql" //driver don connection
+	_ "github.com/denisenkom/go-mssqldb" //driver to MS SQLSERVER connection
+	_ "github.com/go-sql-driver/mysql"   //driver to mySQL connection
 	"github.com/joho/godotenv"
 )
 
@@ -27,11 +29,13 @@ type ClientMail struct {
 }
 
 var (
-	db           *sql.DB
-	dbConenction *databaseConenction
-	m            *ClientMail
-	appShop      goshopify.App
-	clientShop   *goshopify.Client
+	dbVic         *sql.DB
+	dbSage        *sql.DB
+	dbConenction  *databaseConenction
+	dbSageConnect *databaseConenction
+	m             *ClientMail
+	appShop       goshopify.App
+	clientShop    *goshopify.Client
 )
 
 func init() {
@@ -53,6 +57,13 @@ func init() {
 	dbConenction.port, _ = strconv.Atoi(os.Getenv("DB_PORT"))
 	dbConenction.dbName = os.Getenv("DB_DBNAME")
 
+	dbSageConnect = &databaseConenction{}
+	dbSageConnect.username = os.Getenv("DB_SAGE_USERNAME")
+	dbSageConnect.password = os.Getenv("DB_SAGE_PASSWORD")
+	dbSageConnect.host = os.Getenv("DB_SAGE_HOST")
+	dbSageConnect.port, _ = strconv.Atoi(os.Getenv("DB_SAGE_PORT"))
+	dbSageConnect.dbName = os.Getenv("DB_SAGE_DBNAME")
+
 	m = &ClientMail{}
 	m.mail = os.Getenv("CLIENT_MAIL")
 	m.server = os.Getenv("SERVER_MAIL")
@@ -65,26 +76,57 @@ func init() {
 	clientShop = goshopify.NewClient(appShop, "victoryswitzerland", "", goshopify.WithVersion("2020-10"), goshopify.WithRetry(3))
 }
 
-//CreateConnection to the Data Base
-func CreateConnection() {
-	if connetcion, err := sql.Open("mysql", generateConectionURL()); err != nil {
+//CreateConnection to the Vic Data Base
+func CreateVicConnection() {
+	if connetcion, err := sql.Open("mysql", generateConectionURLForVic()); err != nil {
 		panic(err)
 	} else {
-		db = connetcion
-		log.Println("conecction db succeful!!")
+		dbVic = connetcion
+		log.Println("created connection with Vic DB succefuly!!")
 	}
 }
 
-//CloseConnection for close de conection to db
-func CloseConnection() {
-	db.Close()
-	log.Println("Close conecction db succeful!!")
+//CloseConnection for close de conection to Vic db
+func CloseVicConnection() {
+	dbVic.Close()
+	log.Println("Close conecction dbVic succeful!!")
 }
 
-//Ping make a ping to db
-func Ping() {
-	if err := db.Ping(); err != nil {
+//Ping make a ping to Vic db
+func PingToVic() {
+	if err := dbVic.Ping(); err != nil {
 		panic((err))
+	} else {
+		log.Println("conecction dbVic succeful!!")
+	}
+}
+
+//CreateConnection to the Sage Data Base
+func CreateSageConnection() {
+
+	if connetcion, err := sql.Open("sqlserver", generateConectionURLForSage()); err != nil {
+		log.Panicln(err)
+	} else {
+		dbSage = connetcion
+		log.Println("created connection with SAGE DB succefuly!!")
+	}
+}
+
+//CloseConnection for close de conection to Sage db
+func CloseSageConnection() {
+	if err := dbSage.Close(); err != nil {
+		log.Println(err)
+	}
+	log.Println("Close conecction db SAGE succeful!!")
+}
+
+//Ping make a ping to Sage db
+func PingToSage() {
+	if err := dbSage.Ping(); err != nil {
+		log.Println(err)
+		//panic((err))
+	} else {
+		log.Println("conecction DB Sage succeful!!")
 	}
 }
 
@@ -139,22 +181,54 @@ func GetClientShop() *goshopify.Client {
 	return clientShop
 }
 
-func generateConectionURL() string {
+func generateConectionURLForVic() string {
 	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", dbConenction.username, dbConenction.password, dbConenction.host, dbConenction.port, dbConenction.dbName)
 }
 
-//Exec is the wrapper for db.exec to log is an error
-func Exec(query string, args ...interface{}) (sql.Result, error) {
-	result, err := db.Exec(query, args...)
+func generateConectionURLForSage() string {
+	query := url.Values{}
+	query.Add("database", "AUFTRAG_VS_TEST")
+
+	u := &url.URL{
+		Scheme: "sqlserver",
+		User:   url.UserPassword(dbSageConnect.username, dbSageConnect.password),
+		Host:   fmt.Sprintf("%s:%d", dbSageConnect.host, dbSageConnect.port),
+		// Path:  instance, // if connecting to an instance instead of a port
+		RawQuery: query.Encode(),
+	}
+	return u.String()
+}
+
+//Exec is the wrapper for db.exec for Vic DB
+func VicExec(query string, args ...interface{}) (sql.Result, error) {
+	result, err := dbVic.Exec(query, args...)
 	if err != nil {
 		log.Println(err)
 	}
 	return result, err
 }
 
-//Query is the wrapper for db.Query to log is an error
-func Query(query string, args ...interface{}) (*sql.Rows, error) {
-	rows, err := db.Query(query, args...)
+//Query is the wrapper for db.Query for Vic DB
+func VicQuery(query string, args ...interface{}) (*sql.Rows, error) {
+	rows, err := dbVic.Query(query, args...)
+	if err != nil {
+		log.Println(err)
+	}
+	return rows, err
+}
+
+//Exec is the wrapper for db.exec for SAGE DB
+func SageExec(query string, args ...interface{}) (sql.Result, error) {
+	result, err := dbSage.Exec(query, args...)
+	if err != nil {
+		log.Println(err)
+	}
+	return result, err
+}
+
+//Query is the wrapper for db.Query for SAGE DB
+func SageQuery(query string, args ...interface{}) (*sql.Rows, error) {
+	rows, err := dbSage.Query(query, args...)
 	if err != nil {
 		log.Println(err)
 	}

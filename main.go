@@ -26,15 +26,12 @@ func (d *data) UpdateO() {
 	fmt.Println("success!!")
 }
 func main() {
-	configs.CreateConnection()
-	defer configs.CloseConnection()
-	defer fmt.Println("se cerro del sistema")
-	/* 	app := goshopify.App{
-	   		ApiKey:   "38bf6d9fd4b6fa66b7826fb14a59c648",
-	   		Password: "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",
-	   	}
-	   	client := goshopify.NewClient(app, "victoryswitzerland", "", goshopify.WithVersion("2020-10"))
-	*/
+	configs.CreateVicConnection()
+	defer configs.CloseVicConnection()
+
+	configs.CreateSageConnection()
+	defer configs.CloseSageConnection()
+
 	mux := mux.NewRouter()
 	s := http.StripPrefix("/assets/", http.FileServer(http.Dir("./assets/")))
 	mux.PathPrefix("/assets/").Handler(s)

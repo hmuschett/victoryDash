@@ -70,7 +70,7 @@ func GetOrderByIDShopifyAndnameShopify(IDShopify int64, nameShopify string) (gos
 	query := `SELECT o.id_shopify FROM orders o
 				WHERE o.id_shopify  LIKE ? and name_shopify  like ?`
 
-	row, _ := configs.Query(query, IDShopify, nameShopify)
+	row, _ := configs.VicQuery(query, IDShopify, nameShopify)
 	if row.Next() {
 		row.Scan(&order.ID)
 	} else {
@@ -86,7 +86,7 @@ func GetOrderByIDShopify(IDShopify int64) (goshopify.Order, error) {
 	query := `SELECT o.id_shopify, o.name_shopify FROM orders o
 				WHERE o.id_shopify  LIKE ? `
 
-	row, _ := configs.Query(query, IDShopify)
+	row, _ := configs.VicQuery(query, IDShopify)
 	if row.Next() {
 		row.Scan(&order.ID, &order.Name)
 	} else {
@@ -98,7 +98,7 @@ func GetOrderByIDShopify(IDShopify int64) (goshopify.Order, error) {
 //SaveOrder save on DB an Order
 func SaveOrder(order goshopify.Order) int64 {
 	query := `INSERT orders SET id_shopify =?, name_shopify =?, subtotal_price=?`
-	result, _ := configs.Exec(query, order.ID, order.Name, order.SubtotalPrice)
+	result, _ := configs.VicExec(query, order.ID, order.Name, order.SubtotalPrice)
 	ID, _ := result.LastInsertId()
 	return ID
 }
@@ -117,7 +117,7 @@ func GetOrdersWERM() (goshopify.OrdersResource, error) {
 				order by o.name_shopify desc
 				limit 10`
 
-	row, err := configs.Query(query)
+	row, err := configs.VicQuery(query)
 	for row.Next() {
 		order := goshopify.Order{}
 		row.Scan(&order.Name, &order.ID, &order.Confirmed, &order.SubtotalPrice, &order.BrowserIp)
@@ -203,7 +203,7 @@ func updateStatusOrders(arrIDSopify []string, provider string) {
 								)`
 	ids := "'" + strings.Join(arrIDSopify[:], "','") + "'"
 	query = strings.ReplaceAll(query, "%s", ids)
-	configs.Exec(query, provider)
+	configs.VicExec(query, provider)
 }
 
 func updateStatusOrder(arrIDSopify string, provider string, status string) {
@@ -217,7 +217,7 @@ func updateStatusOrder(arrIDSopify string, provider string, status string) {
 									AND o.id_shopify = ?
 								)`
 
-	configs.Exec(query, status, provider, arrIDSopify)
+	configs.VicExec(query, status, provider, arrIDSopify)
 }
 func CreateCsvOrderByProvider(arrIdSopify []string, provider string) (string, error) {
 	query := `SELECT o.name_shopify,SUBSTRING_INDEX(po.sku, '-', -1) sku, po.quantity FROM orders  o  
@@ -227,7 +227,7 @@ func CreateCsvOrderByProvider(arrIdSopify []string, provider string) (string, er
 	ids := "'" + strings.Join(arrIdSopify[:], "','") + "'"
 	query = strings.ReplaceAll(query, "%s", ids)
 	fmt.Println(query)
-	rows, err := configs.Query(query, provider)
+	rows, err := configs.VicQuery(query, provider)
 	if err != nil {
 		log.Fatalf("In the Query..%s", err)
 	}

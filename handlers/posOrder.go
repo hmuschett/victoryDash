@@ -55,7 +55,7 @@ func GetPOSOrders(w http.ResponseWriter, r *http.Request) {
 	})
 
 	o := calculatePriceEPVariant(orders)
-	po := getDateToSendAS2(o)
+	po := getDateToSentAS2(o)
 	models.SendData(w, po)
 }
 
@@ -413,7 +413,7 @@ func CreateDennerXMLRefound(id string) (string, error) {
 
 func SaveDateToSenderToAS2(id string) error {
 	query := `INSERT pos_order SET shopify_id = ?, date_send=SYSDATE()`
-	result, _ := configs.Exec(query, id)
+	result, _ := configs.VicExec(query, id)
 	_, err := result.LastInsertId()
 	return err
 }
@@ -441,7 +441,21 @@ func calculatePriceEPVariant(orders []goshopify.Order) []goshopify.Order {
 			pro, err2 := configs.GetClientShop().Product.Get(p.ProductID, nil)
 			if err2 != nil {
 				fmt.Println(err2)
-				continue
+				continue //some product was delete
+			}
+			//check if this product has a denner_product tag
+
+			tags := strings.Split(pro.Tags, ",")
+
+			for _, t := range tags {
+				if t == "denner-product" {
+					resOrder[i].Confirmed = true
+					//resOrder[i].FulfillmentStatus = pro.Title
+					break
+				} else {
+					resOrder[i].Confirmed = false
+					resOrder[i].FulfillmentStatus = pro.Title
+				}
 			}
 
 			var variantPrice *decimal.Decimal
@@ -478,12 +492,12 @@ func calculatePriceEPVariant(orders []goshopify.Order) []goshopify.Order {
 
 	return resOrder
 }
-func getDateToSendAS2(orders []goshopify.Order) []goshopify.Order {
+func getDateToSentAS2(orders []goshopify.Order) []goshopify.Order {
 	resOrder := orders
 	for i, o := range orders {
 		query := `SELECT date_send FROM pos_order po	
 				WHERE po.shopify_id = ?`
-		rows, err := configs.Query(query, o.ID)
+		rows, err := configs.VicQuery(query, o.ID)
 		if err != nil {
 			fmt.Println("error al hacer la consulta para obtener el shopify_id de la DB ", err)
 		} else if rows.Next() {
