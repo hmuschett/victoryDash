@@ -27,7 +27,6 @@ const parameters = `<?xml version="1.0" encoding="iso-8859-1"?>
 
 //GetPOSOrders return the las 10 orders from POS
 func GetPOSOrders(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("estoy aqui")
 	utils.EnableCors(w)
 	options := struct {
 		Limit      string `url:"limit,omitempty,comma"`
@@ -123,7 +122,7 @@ func CreateDennerXML(id string) (string, error) {
 	structData := models.NewDennerInvoice()
 	dt := time.Now()
 
-	structData.Interchange.IcRef = int64(o.OrderNumber)
+	structData.Interchange.IcRef = strconv.Itoa(o.OrderNumber)
 	structData.Invoice.Header.MessageReference.ReferenceDate.Date.Date = dt.Format("20060102")
 	tags := strings.Split(o.Tags, ",")
 	for _, t := range tags {
@@ -295,7 +294,7 @@ func CreateDennerXMLRefound(id string) (string, error) {
 		item = append(item, r.LineItemId)
 	}
 
-	structData.Interchange.IcRef = int64(o.OrderNumber)
+	structData.Interchange.IcRef = strconv.Itoa(o.OrderNumber)
 	structData.Invoice.Type = "EGS"
 	structData.Invoice.Header.MessageReference.ReferenceDate.Date.Date = dt.Format("20060102")
 	structData.Invoice.Header.MessageReference.ReferenceDate.ReferenceNo = decimal.NewFromFloat(float64(o.OrderNumber) + 0.7).String()
