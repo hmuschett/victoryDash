@@ -13,7 +13,7 @@ type Interchange struct {
 	XMLName   xml.Name  `xml:"INTERCHANGE"`
 	IcSender  IcSender  `xml:"IC-SENDER"`
 	IcReciver IcReciver `xml:"IC-RECEIVER"`
-	IcRef     int64     `xml:"IC-Ref"`
+	IcRef     string    `xml:"IC-Ref"`
 }
 type IcSender struct {
 	XMLName xml.Name `xml:"IC-SENDER"`
@@ -233,7 +233,6 @@ type PaymentPeriod struct {
 const (
 	pidSender          = "7640146250001"
 	pidReciver         = "7610029000009"
-	icRef              = 89142
 	typeEFD            = "EFD"
 	formatDate         = "CCYYMMDD"
 	typeCR             = "CR"
@@ -273,7 +272,6 @@ func NewDennerInvoice() DennerInvoice {
 	data := DennerInvoice{}
 	data.Interchange.IcSender.Pid = pidSender
 	data.Interchange.IcReciver.Pid = pidReciver
-	data.Interchange.IcRef = icRef
 	data.Invoice.Type = typeEFD
 	data.Invoice.Header.MessageReference.ReferenceDate.Date = new(Date)
 	data.Invoice.Header.MessageReference.ReferenceDate.Date.Format = formatDate
