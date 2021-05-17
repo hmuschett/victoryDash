@@ -55,7 +55,7 @@ func main() {
 	mux.HandleFunc("/api/v1/posorder/refoundorder", handlers.SendMailPOSRefoundOrders).Methods("POST")
 
 	mux.HandleFunc("/api/v1/sageorder/orders", handlers.GetSageOrders).Methods("GET")
-	mux.HandleFunc("/api/v1/posorder/sendorders", handlers.SendOrders).Methods("POST")
+	mux.HandleFunc("/api/v1/sageorder/sendorders", handlers.SendOrders).Methods("POST")
 
 	if configs.GetEnv() == "dev" {
 		log.Fatal(http.ListenAndServe(configs.GetPort(), mux))
