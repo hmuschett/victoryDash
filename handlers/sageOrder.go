@@ -10,14 +10,100 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 	"victorydash/configs"
 	"victorydash/models"
 	"victorydash/utils"
 )
 
+func GetTest(w http.ResponseWriter, r *http.Request) {
+	utils.EnableCors(w)
+	fromDate := r.FormValue("fromDate")
+	toDate := r.FormValue("toDate")
+
+	doks := make([]models.Dok, 0)
+
+	query := `SELECT DokNr, DokTyp, DokDat, LFirma, LStrasse, LPLZ, LOrt, TotalPos,        
+				TotalSteuer, Zahlung, TotalDok, HeadPosNr, ArtNr, BezeichnungD1,    
+				Bestellmenge, VP, PosiTot, MWStBtrg, IEANCode, EBPPBillAccountID
+				from AUFTRAG_VS_TEST.dbo.X_Dok_Denner
+				WHERE DokDat BETWEEN  @p1  and @p2 ORDER BY DokDat DESC`
+
+	fromD, _ := time.Parse("2006-1-2", fromDate)
+	toD, _ := time.Parse("2006-1-2", toDate)
+	rows, err := configs.SageQuery(query, fromD, toD)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	var dokN string
+	dok := models.Dok{}
+
+	for rows.Next() {
+
+		dokScan := models.DokScan{}
+		err := rows.Scan(&dokScan.DokNr, &dokScan.DokTyp, &dokScan.DokDat, &dokScan.LFirma, &dokScan.LStrasse,
+			&dokScan.LPLZ, &dokScan.LOrt, &dokScan.TotalPos, &dokScan.TotalSteuer, &dokScan.Zahlung,
+			&dokScan.TotalDok, &dokScan.HeadPosNr, &dokScan.ArtNr, &dokScan.BezeichnungD1, &dokScan.Bestellmenge,
+			&dokScan.VP, &dokScan.PosiTot, &dokScan.MWStBtrg, &dokScan.IEANCode, &dokScan.EBPPBillAccountID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if dokN == dokScan.DokNr {
+			p := models.Product{}
+			p.HeadPosNr = dokScan.HeadPosNr
+			p.ArtNr = dokScan.ArtNr
+			p.BezeichnungD1 = dokScan.BezeichnungD1
+			p.Bestellmenge = dokScan.Bestellmenge
+			p.VP = dokScan.VP
+			p.PosiTot = dokScan.PosiTot
+			p.MWStBtrg = dokScan.MWStBtrg
+			p.IEANCode = dokScan.IEANCode
+
+			dok.Products = append(dok.Products, p)
+		} else {
+			if dokN != "" {
+				doks = append(doks, dok)
+			}
+
+			dokN = dokScan.DokNr
+			dok = models.Dok{}
+
+			dok.DokNr = dokScan.DokNr
+			dok.DokTyp = dokScan.DokTyp
+			dok.DokDat = dokScan.DokDat
+			dok.LFirma = dokScan.LFirma
+			dok.LStrasse = dokScan.LStrasse
+			dok.LPLZ = dokScan.LPLZ
+			dok.LOrt = dokScan.LOrt
+			dok.TotalPos = dokScan.TotalPos
+			dok.TotalSteuer = dokScan.TotalSteuer
+			dok.Zahlung = "10"
+			dok.TotalDok = dokScan.TotalDok
+			dok.EBPPBillAccountID = dokScan.EBPPBillAccountID
+
+			dok.Products = make([]models.Product, 0)
+			p := models.Product{}
+			p.HeadPosNr = dokScan.HeadPosNr
+			p.ArtNr = dokScan.ArtNr
+			p.BezeichnungD1 = dokScan.BezeichnungD1
+			p.Bestellmenge = dokScan.Bestellmenge
+			p.VP = dokScan.VP
+			p.PosiTot = dokScan.PosiTot
+			p.MWStBtrg = dokScan.MWStBtrg
+			p.IEANCode = dokScan.IEANCode
+
+			dok.Products = append(dok.Products, p)
+		}
+	}
+	doks = append(doks, dok) //añadir al ultimo dok
+	d := getDateToSentAS2Dok(doks)
+	models.SendData(w, d)
+}
+
 //GetSageOrders return the las 10 orders from POS
 func GetSageOrders(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("estoy aqui en Sage")
 	utils.EnableCors(w)
 	doks := make([]models.Dok, 0)
 
@@ -28,7 +114,7 @@ func GetSageOrders(w http.ResponseWriter, r *http.Request) {
 							WHERE DokNr in (SELECT  dok.nn from (
 							SELECT  DISTINCT  x.DokNr as nn , x.DokDat  FROM dbo.X_Dok_Denner x    
 							    ORDER BY x.DokDat DESC  
-							    OFFSET 10 ROWS
+							    OFFSET 0 ROWS
 							    FETCH NEXT 20 ROWS ONLY) as dok) `
 	rows, err := configs.SageQuery(query)
 

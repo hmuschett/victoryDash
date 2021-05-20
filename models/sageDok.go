@@ -24,7 +24,7 @@ type Dok struct {
 	Products []Product `json:"Products,omitempty"`
 }
 type Product struct {
-	HeadPosNr     int     `json:"HeadPosNr,omitempty"`
+	HeadPosNr     float64 `json:"HeadPosNr,omitempty"`
 	ArtNr         string  `json:"ArtNr,omitempty"`
 	BezeichnungD1 string  `json:"BezeichnungD1,omitempty"`
 	Bestellmenge  int     `json:"Bestellmenge,omitempty"`
@@ -47,7 +47,7 @@ type DokScan struct {
 	TotalDok    float64   `json:"TotalDok,omitempty"`
 	Steuersatz1 float64   `json:"Steuersatz1,omitempty"`
 
-	HeadPosNr         int     `json:"HeadPosNr,omitempty"`
+	HeadPosNr         float64 `json:"HeadPosNr,omitempty"`
 	ArtNr             string  `json:"ArtNr,omitempty"`
 	BezeichnungD1     string  `json:"BezeichnungD1,omitempty"`
 	Bestellmenge      int     `json:"Bestellmenge,omitempty"`
