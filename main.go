@@ -56,7 +56,7 @@ func main() {
 
 	mux.HandleFunc("/api/v1/sageorder/orders", handlers.GetSageOrders).Methods("GET")
 	mux.HandleFunc("/api/v1/sageorder/sendorders", handlers.SendOrders).Methods("POST")
-	mux.HandleFunc("/api/v1/sageorder/orders111", handlers.GetTest).Queries("fromDate", "{fromDate}", "toDate", "{toDate}").Methods("GET")
+	mux.HandleFunc("/api/v1/sageorder/ordersbydates", handlers.GetSageOrdersByDates).Queries("fromDate", "{fromDate}", "toDate", "{toDate}").Methods("GET")
 
 	//mux.Path("/api/v1/sageorder/orders111").Queries("fromDate", "{fromDate}").HandlerFunc(handlers.GetTest).Methods("GET")
 
