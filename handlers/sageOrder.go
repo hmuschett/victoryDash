@@ -321,15 +321,16 @@ func getDateToSentAS2Dok(orders []models.Dok) []models.Dok {
 
 	for i, o := range orders {
 		if strings.Trim(o.DokNr, " ") != "" {
-			query := `SELECT date_send FROM pos_order po	
+			query := `SELECT date_send FROM dok_send_as po	
 				WHERE po.shopify_id = ?`
 			rows, err := configs.VicQuery(query, o.DokNr)
 
 			if err != nil {
 				fmt.Println("error al hacer la consulta para obtener el shopify_id de la DB ", err)
 			} else if rows.Next() {
-				rows.Scan(&resOrder[i].DokDat)
-				resOrder[i].Zahlung = resOrder[i].DokDat.Format("01-02-2006 15:04")
+				rows.Scan(&resOrder[i].SentAS)
+				resOrder[i].Zahlung = resOrder[i].SentAS.Format("01-02-2006 15:04")
+
 			} else {
 				resOrder[i].Zahlung = "hhh"
 			}

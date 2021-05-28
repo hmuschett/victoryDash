@@ -20,8 +20,8 @@ type Dok struct {
 	TotalDok          float64   `json:"TotalDok,omitempty"`
 	EBPPBillAccountID string    `json:"EBPPBillAccountID,omitempty"`
 	Steuersatz1       float64   `json:"Steuersatz1,omitempty"`
-
-	Products []Product `json:"Products,omitempty"`
+	SentAS            time.Time `json:"SentAS,omitempty"`
+	Products          []Product `json:"Products,omitempty"`
 }
 type Product struct {
 	HeadPosNr     float64 `json:"HeadPosNr,omitempty"`
