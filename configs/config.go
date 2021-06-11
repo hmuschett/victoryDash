@@ -187,7 +187,7 @@ func generateConectionURLForVic() string {
 
 func generateConectionURLForSage() string {
 	query := url.Values{}
-	query.Add("database", "AUFTRAG_VS_TEST")
+	query.Add("database", os.Getenv("DB_SAGE_DBNAME"))
 
 	u := &url.URL{
 		Scheme: "sqlserver",

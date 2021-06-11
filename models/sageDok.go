@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"log"
 	"time"
 	"victorydash/configs"
@@ -47,15 +48,15 @@ type DokScan struct {
 	TotalDok    float64   `json:"TotalDok,omitempty"`
 	Steuersatz1 float64   `json:"Steuersatz1,omitempty"`
 
-	HeadPosNr         float64 `json:"HeadPosNr,omitempty"`
-	ArtNr             string  `json:"ArtNr,omitempty"`
-	BezeichnungD1     string  `json:"BezeichnungD1,omitempty"`
-	Bestellmenge      int     `json:"Bestellmenge,omitempty"`
-	VP                float64 `json:"VP,omitempty"`
-	PosiTot           float64 `json:"PosiTot,omitempty"`
-	MWStBtrg          float64 `json:"MWStBtrg,omitempty"`
-	IEANCode          string  `json:"iEANCode,omitempty"`
-	EBPPBillAccountID string  `json:"EBPPBillAccountID,omitempty"`
+	HeadPosNr         float64        `json:"HeadPosNr,omitempty"`
+	ArtNr             string         `json:"ArtNr,omitempty"`
+	BezeichnungD1     string         `json:"BezeichnungD1,omitempty"`
+	Bestellmenge      int            `json:"Bestellmenge,omitempty"`
+	VP                float64        `json:"VP,omitempty"`
+	PosiTot           float64        `json:"PosiTot,omitempty"`
+	MWStBtrg          float64        `json:"MWStBtrg,omitempty"`
+	IEANCode          string         `json:"iEANCode,omitempty"`
+	EBPPBillAccountID sql.NullString `json:"EBPPBillAccountID,omitempty"`
 }
 
 func GetDokByDokNur(dokNur string) (Dok, error) {
@@ -112,7 +113,7 @@ func GetDokByDokNur(dokNur string) (Dok, error) {
 			dok.TotalSteuer = dokScan.TotalSteuer
 			dok.Zahlung = "10"
 			dok.TotalDok = dokScan.TotalDok
-			dok.EBPPBillAccountID = dokScan.EBPPBillAccountID
+			dok.EBPPBillAccountID = dokScan.EBPPBillAccountID.String
 			dok.Steuersatz1 = dokScan.Steuersatz1
 
 			dok.Products = make([]Product, 0)

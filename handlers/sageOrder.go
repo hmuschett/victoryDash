@@ -26,7 +26,7 @@ func GetSageOrdersByDates(w http.ResponseWriter, r *http.Request) {
 	query := `SELECT DokNr, DokTyp, DokDat, LFirma, LStrasse, LPLZ, LOrt, TotalPos,        
 				TotalSteuer, Zahlung, TotalDok, HeadPosNr, ArtNr, BezeichnungD1,    
 				Bestellmenge, VP, PosiTot, MWStBtrg, IEANCode, EBPPBillAccountID
-				from AUFTRAG_VS_TEST.dbo.X_Dok_Denner
+				from VictoryTest.dbo.X_Dok_Denner
 				WHERE DokDat BETWEEN  @p1  and @p2 ORDER BY DokDat DESC`
 
 	fromD, _ := time.Parse("2006-1-2", fromDate)
@@ -81,7 +81,7 @@ func GetSageOrdersByDates(w http.ResponseWriter, r *http.Request) {
 			dok.TotalSteuer = dokScan.TotalSteuer
 			dok.Zahlung = "10"
 			dok.TotalDok = dokScan.TotalDok
-			dok.EBPPBillAccountID = dokScan.EBPPBillAccountID
+			dok.EBPPBillAccountID = dokScan.EBPPBillAccountID.String
 
 			dok.Products = make([]models.Product, 0)
 			p := models.Product{}
@@ -105,12 +105,13 @@ func GetSageOrdersByDates(w http.ResponseWriter, r *http.Request) {
 //GetSageOrders return the las 10 orders from POS
 func GetSageOrders(w http.ResponseWriter, r *http.Request) {
 	utils.EnableCors(w)
+	results := make(map[string]string)
 	doks := make([]models.Dok, 0)
 
 	query := `SELECT DokNr, DokTyp, DokDat, LFirma, LStrasse, LPLZ, LOrt, TotalPos,        
 						TotalSteuer, Zahlung, TotalDok, HeadPosNr, ArtNr, BezeichnungD1,    
 						Bestellmenge, VP, PosiTot, MWStBtrg, IEANCode, EBPPBillAccountID
-						from AUFTRAG_VS_TEST.dbo.X_Dok_Denner
+						from VictoryTest.dbo.X_Dok_Denner
 							WHERE DokNr in (SELECT  dok.nn from (
 							SELECT  DISTINCT  x.DokNr as nn , x.DokDat  FROM dbo.X_Dok_Denner x    
 							    ORDER BY x.DokDat DESC  
@@ -119,20 +120,26 @@ func GetSageOrders(w http.ResponseWriter, r *http.Request) {
 	rows, err := configs.SageQuery(query)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		results["No"] = "We cannot read from SAGE DB"
+		results["err"] = err.Error()
+		models.SendData(w, results)
 	}
 	var dokN string
 	dok := models.Dok{}
-
+foreach:
 	for rows.Next() {
-
 		dokScan := models.DokScan{}
 		err := rows.Scan(&dokScan.DokNr, &dokScan.DokTyp, &dokScan.DokDat, &dokScan.LFirma, &dokScan.LStrasse,
 			&dokScan.LPLZ, &dokScan.LOrt, &dokScan.TotalPos, &dokScan.TotalSteuer, &dokScan.Zahlung,
 			&dokScan.TotalDok, &dokScan.HeadPosNr, &dokScan.ArtNr, &dokScan.BezeichnungD1, &dokScan.Bestellmenge,
 			&dokScan.VP, &dokScan.PosiTot, &dokScan.MWStBtrg, &dokScan.IEANCode, &dokScan.EBPPBillAccountID)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			results["No"] = "We cannot read from SAGE DB"
+			results["err"] = err.Error()
+			models.SendData(w, results)
+			break foreach
 		}
 
 		if dokN == dokScan.DokNr {
@@ -166,7 +173,7 @@ func GetSageOrders(w http.ResponseWriter, r *http.Request) {
 			dok.TotalSteuer = dokScan.TotalSteuer
 			dok.Zahlung = "10"
 			dok.TotalDok = dokScan.TotalDok
-			dok.EBPPBillAccountID = dokScan.EBPPBillAccountID
+			dok.EBPPBillAccountID = dokScan.EBPPBillAccountID.String
 
 			dok.Products = make([]models.Product, 0)
 			p := models.Product{}
