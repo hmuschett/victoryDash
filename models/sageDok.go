@@ -63,7 +63,7 @@ func GetDokByDokNur(dokNur string) (Dok, error) {
 	query := `SELECT DokNr, DokTyp, DokDat, LFirma, LStrasse, LPLZ, LOrt, TotalPos,        
 	TotalSteuer, Zahlung, TotalDok, HeadPosNr, ArtNr, BezeichnungD1,    
 	Bestellmenge, VP, PosiTot, MWStBtrg, IEANCode, EBPPBillAccountID, Steuersatz1
-	from AUFTRAG_VS_TEST.dbo.X_Dok_Denner WHERE DokNr = @p1 `
+	from dbo.X_Dok_Denner WHERE DokNr = @p1 `
 
 	rows, err := configs.SageQuery(query, dokNur)
 

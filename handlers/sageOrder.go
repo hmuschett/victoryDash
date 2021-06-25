@@ -111,7 +111,7 @@ func GetSageOrders(w http.ResponseWriter, r *http.Request) {
 	query := `SELECT DokNr, DokTyp, DokDat, LFirma, LStrasse, LPLZ, LOrt, TotalPos,        
 						TotalSteuer, Zahlung, TotalDok, HeadPosNr, ArtNr, BezeichnungD1,    
 						Bestellmenge, VP, PosiTot, MWStBtrg, IEANCode, EBPPBillAccountID
-						from VictoryTest.dbo.X_Dok_Denner
+						from dbo.X_Dok_Denner
 							WHERE DokNr in (SELECT  dok.nn from (
 							SELECT  DISTINCT  x.DokNr as nn , x.DokDat  FROM dbo.X_Dok_Denner x    
 							    ORDER BY x.DokDat DESC  
@@ -127,7 +127,7 @@ func GetSageOrders(w http.ResponseWriter, r *http.Request) {
 	}
 	var dokN string
 	dok := models.Dok{}
-foreach:
+	//foreach:
 	for rows.Next() {
 		dokScan := models.DokScan{}
 		err := rows.Scan(&dokScan.DokNr, &dokScan.DokTyp, &dokScan.DokDat, &dokScan.LFirma, &dokScan.LStrasse,
@@ -139,7 +139,8 @@ foreach:
 			results["No"] = "We cannot read from SAGE DB"
 			results["err"] = err.Error()
 			models.SendData(w, results)
-			break foreach
+			return
+			//break foreach
 		}
 
 		if dokN == dokScan.DokNr {
@@ -216,6 +217,7 @@ func SendOrders(w http.ResponseWriter, r *http.Request) {
 		} else {
 			//mandar el csv adjunto en un correo
 			configs.SendMailForWermProvider(xml)
+
 			configs.CopyFileToAS2(xml)
 
 			err = saveDateToSenderToAS2Server(orderID) //save the date to sender a order to AS2 server
