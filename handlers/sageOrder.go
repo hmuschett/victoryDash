@@ -218,7 +218,7 @@ func SendOrders(w http.ResponseWriter, r *http.Request) {
 			//mandar el csv adjunto en un correo
 			configs.SendMailForWermProvider(xml)
 
-			configs.CopyFileToAS2(xml)
+			//configs.CopyFileToAS2(xml)
 
 			err = saveDateToSenderToAS2Server(orderID) //save the date to sender a order to AS2 server
 			if err != nil {
