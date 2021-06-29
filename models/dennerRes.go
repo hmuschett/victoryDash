@@ -238,7 +238,7 @@ const (
 	typeCR             = "CR"
 	typeIT             = "IT"
 	typeESRNEU         = "ESR-NEU"
-	taxNo              = "CHE274334848"
+	taxNo              = "CHE105904292"
 	eamBiller          = "7640146250001"
 	nameVictory        = "Victory Switzerland GmbH"
 	streetBiller       = "Solothurnstrasse 24 C"
@@ -251,7 +251,7 @@ const (
 	eamPayer           = "7610029000009" //es el moismo valor que pidReciver
 	namePayer          = "Denner AG"
 	streetPayer        = "Grubenstrasse 10"
-	cityPayer          = "Zürich"
+	cityPayer          = "Zurich"
 	zipPayer           = "8045"
 	itemTypeCode       = "101"
 	itNo               = "400000"

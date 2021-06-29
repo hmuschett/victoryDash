@@ -241,11 +241,13 @@ func CreateDennerXMLFromSage(id string) (string, error) {
 
 	structData.Interchange.IcRef = o.DokNr
 	structData.Invoice.Header.MessageReference.ReferenceDate.Date.Date = o.DokDat.Format("20060102")
-
-	if o.DokTyp == "Rechnung_Denner" {
+	var typeO string
+	if o.DokTyp == "Rechnung Denner" {
 		structData.Invoice.Type = "EFD"
-	} else if o.DokTyp == "Gutschrift_Denner" {
+		typeO = "R_"
+	} else if o.DokTyp == "Gutschrift Denner" {
 		structData.Invoice.Type = "EGS"
+		typeO = "G_"
 	}
 	structData.Invoice.Header.MessageReference.ReferenceDate.ReferenceNo = o.DokNr
 	structData.Invoice.Header.PrintDate.Date.Date = o.DokDat.Format("20060102")
@@ -320,7 +322,7 @@ func CreateDennerXMLFromSage(id string) (string, error) {
 		log.Println(err)
 	}
 	sOrderN := o.DokNr
-	nameFile := path + "/files/" + sOrderN + "_VICTORY.xml"
+	nameFile := path + "/files/" + typeO + sOrderN + "_VICTORY.xml"
 	_ = ioutil.WriteFile(nameFile, file, 0644)
 	fmt.Println("Created sussefull")
 	return nameFile, nil
